@@ -62,19 +62,16 @@ const getContoursFromMat = (cv: typeof CV, src: Mat, threshold = 210, onlyExtern
   return allContourPointsList;
 }
 
-const calcContours = async (threshold = 210, onlyExternal = false) => {
-  const imgBitmap = (await createImageBitmap(await fetch('/test.png').then(r => r.blob())));
-  const offscreenCanvas = new OffscreenCanvas(imgBitmap.width, imgBitmap.height);
+const calcContours = async (src: ImageBitmap, threshold = 210, onlyExternal = false) => {
+  const offscreenCanvas = new OffscreenCanvas(src.width, src.height);
   const ctx = offscreenCanvas.getContext('2d') as OffscreenCanvasRenderingContext2D;
-  ctx.drawImage(imgBitmap, 0, 0);
+  ctx.drawImage(src, 0, 0);
   
-  const imgData = ctx.getImageData(0,0,imgBitmap.width, imgBitmap.height);
+  const imgData = ctx.getImageData(0,0,src.width, src.height);
   const mat = self.cv.matFromImageData(imgData);
 
   const contours = getContoursFromMat(self.cv, mat, threshold, onlyExternal);
-  console.log('calcContours: finished')
 
-  imgBitmap.close();
   mat.delete();
 
   return contours;
@@ -83,7 +80,7 @@ const calcContours = async (threshold = 210, onlyExternal = false) => {
 self.addEventListener('message', (ev) => {
   const payload: CalcContourEventPayload = ev.data;
   if(payload.type === 'calcContours') {
-    calcContours(payload.threshold, payload.onlyExternal).then(results => {
+    calcContours(payload.bitmap, payload.threshold, payload.onlyExternal).then(results => {
       const returnPayload: FinishCalcContourEventPayload = {
         type: 'finishCalcContours',
         contours: results,

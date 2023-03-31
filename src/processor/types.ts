@@ -6,7 +6,7 @@ export interface CalcContourEventPayload {
   type: typeof CalcContourEventId;
   threshold: number;
   onlyExternal: boolean;
-  // imageData: ImageData;
+  bitmap: ImageBitmap;
 }
 
 // main <- OpenCV Worker

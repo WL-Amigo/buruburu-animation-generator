@@ -1,17 +1,22 @@
 import { CalcContourEventPayload, FinishCalcContourEventPayload, FinishInitOpenCVEventPayload, Vector2D } from './types';
+import type {FrameRenderer as FrameRendererWorkerClass} from './worker/wiggler';
+import * as Comlink from 'comlink';
+import { ContourGetterParameters, FrameRendererParameters } from '../models';
+
+const FrameRenderer = Comlink.wrap<typeof FrameRendererWorkerClass>(new Worker(new URL('./worker/index.ts', import.meta.url), {
+  type: 'module'
+}));
 
 class WorkerCommunicator {
   _cvWorker: Worker;
-  _frameRendererWorker: Worker;
+  _frameRendererWorker: Promise<Comlink.Remote<FrameRendererWorkerClass>>;
   _readyPromise: Promise<void>;
   
   constructor() {
     this._cvWorker = new Worker(new URL('./worker/calcContour.ts', import.meta.url), {
       type: 'classic'
     });
-    this._frameRendererWorker = new Worker(new URL('./worker/index.ts', import.meta.url), {
-      type: 'module'
-    });
+    this._frameRendererWorker = new FrameRenderer();
     this._readyPromise = new Promise((res) => {
       const listener = (ev: MessageEvent) => {
         const payload: FinishInitOpenCVEventPayload = ev.data;
@@ -42,7 +47,7 @@ class WorkerCommunicator {
     // });
   }
 
-  async calcContour(threshold = 210, onlyExternal = false): Promise<Vector2D[][]> {
+  async calcContour(src: ImageBitmap, parameters: ContourGetterParameters): Promise<Vector2D[][]> {
     await this._readyPromise;
 
     return new Promise<Vector2D[][]>((res) => {
@@ -57,11 +62,17 @@ class WorkerCommunicator {
       this._cvWorker.addEventListener('message', listener);
       const payload: CalcContourEventPayload = {
         type: 'calcContours',
-        threshold,
-        onlyExternal,
+        threshold: parameters.threshold,
+        onlyExternal: parameters.onlyExternal,
+        bitmap: src,
       };
       this._cvWorker.postMessage(payload);
     });
+  }
+
+  async renderFrames(src: ImageBitmap, contours: Vector2D[][], parameters: FrameRendererParameters): Promise<ImageData[]> {
+    const frameRenderer = await this._frameRendererWorker;
+    return await frameRenderer.applyWiggle(src, contours, parameters);
   }
 }
 

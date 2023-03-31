@@ -1,3 +1,5 @@
+import { FrameRendererParameters } from "../../models";
+import * as Comlink from 'comlink';
 
 interface WigglerParams {
   leaves: number; // int
@@ -95,3 +97,22 @@ export const testWiggler = (src: ImageData, contours: Vector2D[][]) => {
 
   return getContext2D(applied).getImageData(0, 0, applied.width, applied.height);
 }
+
+export class FrameRenderer {
+  public applyWiggle(src: ImageBitmap, contours: Vector2D[][], parameters: FrameRendererParameters): ImageData[] {
+    const baseCanvas = new OffscreenCanvas(src.width, src.height);
+    getContext2D(baseCanvas).drawImage(src,0,0);
+    const normalRadians = contours.map(c => calcNormalRadians(c));
+    const mask = createMask(parameters.patchSize);
+
+    const results: ImageData[] = [];
+
+    for(let i = 0; i < parameters.variationCount; i++) {
+      const appliedCanvas = applyWiggle(baseCanvas, mask, contours, normalRadians, parameters.eps, parameters.movableLength, parameters.std, parameters.isStride);
+      results.push(getContext2D(appliedCanvas).getImageData(0,0,appliedCanvas.width, appliedCanvas.height));
+    }
+
+    return results;
+  }
+}
+Comlink.expose(FrameRenderer);
