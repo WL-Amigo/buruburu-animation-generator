@@ -1,33 +1,40 @@
-import { CalcContourEventPayload, FinishCalcContourEventPayload, FinishInitOpenCVEventPayload, Vector2D } from './types';
-import type {FrameRenderer as FrameRendererWorkerClass} from './worker/wiggler';
+import {
+  CalcContourEventPayload,
+  FinishCalcContourEventPayload,
+  FinishInitOpenCVEventPayload,
+  Vector2D,
+} from './types';
+import type { FrameRenderer as FrameRendererWorkerClass } from './worker/wiggler';
 import * as Comlink from 'comlink';
 import { ContourGetterParameters, FrameRendererParameters } from '../models';
 
-const FrameRenderer = Comlink.wrap<typeof FrameRendererWorkerClass>(new Worker(new URL('./worker/index.ts', import.meta.url), {
-  type: 'module'
-}));
+const FrameRenderer = Comlink.wrap<typeof FrameRendererWorkerClass>(
+  new Worker(new URL('./worker/index.ts', import.meta.url), {
+    type: 'module',
+  })
+);
 
 class WorkerCommunicator {
   _cvWorker: Worker;
   _frameRendererWorker: Promise<Comlink.Remote<FrameRendererWorkerClass>>;
   _readyPromise: Promise<void>;
-  
+
   constructor() {
     this._cvWorker = new Worker(new URL('./worker/calcContour.ts', import.meta.url), {
-      type: 'classic'
+      type: 'classic',
     });
     this._frameRendererWorker = new FrameRenderer();
     this._readyPromise = new Promise((res) => {
       const listener = (ev: MessageEvent) => {
         const payload: FinishInitOpenCVEventPayload = ev.data;
-        if(payload.type === 'finishInitOpenCV') {
+        if (payload.type === 'finishInitOpenCV') {
           console.log('OpenCV worker ready');
           res();
           this._cvWorker.removeEventListener('message', listener);
         }
-      }
-      this._cvWorker.addEventListener('message', listener)
-    })
+      };
+      this._cvWorker.addEventListener('message', listener);
+    });
   }
 
   async loadImage(): Promise<ImageData> {
@@ -53,12 +60,12 @@ class WorkerCommunicator {
     return new Promise<Vector2D[][]>((res) => {
       const listener = (ev: MessageEvent) => {
         const payload: FinishCalcContourEventPayload = ev.data;
-        if(payload.type === 'finishCalcContours') {
+        if (payload.type === 'finishCalcContours') {
           res(payload.contours);
-          this._cvWorker.removeEventListener('message',listener);
+          this._cvWorker.removeEventListener('message', listener);
           return;
         }
-      }
+      };
       this._cvWorker.addEventListener('message', listener);
       const payload: CalcContourEventPayload = {
         type: 'calcContours',
@@ -70,10 +77,14 @@ class WorkerCommunicator {
     });
   }
 
-  async renderFrames(src: ImageBitmap, contours: Vector2D[][], parameters: FrameRendererParameters): Promise<ImageData[]> {
+  async renderFrames(
+    src: ImageBitmap,
+    contours: Vector2D[][],
+    parameters: FrameRendererParameters
+  ): Promise<ImageData[]> {
     const frameRenderer = await this._frameRendererWorker;
     return await frameRenderer.applyWiggle(src, contours, parameters);
   }
 }
 
-export const workerCommunicator = new WorkerCommunicator;
+export const workerCommunicator = new WorkerCommunicator();

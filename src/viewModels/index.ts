@@ -1,13 +1,9 @@
-import { createGeneratorViewModel } from "./generator";
-import { createGeneratorParametersStore } from "./parameters"
+import { createGeneratorViewModel } from './generator';
+import { createGeneratorParametersStore } from './parameters';
 
 export const createAppViewModel = () => {
-  const {
-    parameters, setParameters, reset,
-  } = createGeneratorParametersStore();
-  const {
-    isProcessing, setFile, imageUrl,
-  } = createGeneratorViewModel(parameters);
+  const { parameters, setParameters, reset } = createGeneratorParametersStore();
+  const { isProcessing, setFile, imageUrl } = createGeneratorViewModel(parameters);
 
   return {
     isProcessing,
@@ -16,5 +12,5 @@ export const createAppViewModel = () => {
     parameters,
     setParameters,
     reset,
-  }
-}
+  };
+};

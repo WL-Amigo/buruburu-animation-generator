@@ -1,22 +1,22 @@
-import {createEffect, createMemo, createSignal, onCleanup} from 'solid-js';
+import { createEffect, createSignal, onCleanup } from 'solid-js';
 import { Store } from 'solid-js/store';
-import { AnimationEncoderParameters, ContourGetterParameters, FrameRendererParameters, GeneratorParameters } from '../models';
-import { CachedAsyncComputation } from '../models/cachedComputation';
+import {
+  AnimationEncoderParameters,
+  ContourGetterParameters,
+  FrameRendererParameters,
+  GeneratorParameters,
+} from '../models';
 import { workerCommunicator } from '../processor';
-import { Vector2D } from '../processor/types';
-import { getOffscreenContext2D } from '../utils';
-
-
 
 export const createGeneratorViewModel = (parameters: Store<GeneratorParameters>) => {
   const [isProcessing, setIsProcessing] = createSignal(false);
   const [file, setFile] = createSignal<File | null>(null);
   const [imageBlob, setImageBlob] = createSignal<Blob | null>(null);
   const [imageUrl, setImageUrl] = createSignal<string | null>(null);
-  
+
   createEffect(() => {
     const currentImageBlob = imageBlob();
-    if(currentImageBlob === null) {
+    if (currentImageBlob === null) {
       return;
     }
 
@@ -45,7 +45,7 @@ export const createGeneratorViewModel = (parameters: Store<GeneratorParameters>)
       exportFileType: parameters.exportFileType,
     };
 
-    if(currentFile === null) {
+    if (currentFile === null) {
       return;
     }
 
@@ -67,7 +67,7 @@ export const createGeneratorViewModel = (parameters: Store<GeneratorParameters>)
       bitmap.close();
     })().finally(() => {
       setIsProcessing(false);
-    })
+    });
   });
 
   return {
@@ -75,4 +75,4 @@ export const createGeneratorViewModel = (parameters: Store<GeneratorParameters>)
     setFile,
     imageUrl,
   };
-}
+};

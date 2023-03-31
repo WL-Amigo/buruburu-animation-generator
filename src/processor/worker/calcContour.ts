@@ -1,6 +1,11 @@
 import type CV from 'opencv-ts';
-import type {Mat} from 'opencv-ts';
-import type { CalcContourEventPayload, FinishCalcContourEventPayload, FinishInitOpenCVEventPayload, Vector2D } from '../types';
+import type { Mat } from 'opencv-ts';
+import type {
+  CalcContourEventPayload,
+  FinishCalcContourEventPayload,
+  FinishInitOpenCVEventPayload,
+  Vector2D,
+} from '../types';
 
 declare global {
   interface Window {
@@ -12,22 +17,22 @@ self.importScripts('/opencv.js');
 
 self.cv.onRuntimeInitialized = () => {
   const returnPayload: FinishInitOpenCVEventPayload = {
-    type: 'finishInitOpenCV'
+    type: 'finishInitOpenCV',
   };
   self.postMessage(returnPayload);
-}
+};
 
 const matTo2DVectorArray = (src: Mat): Array<Vector2D> => {
   const data32S = src.data32S;
-  if(data32S.length % 2 !== 0) {
+  if (data32S.length % 2 !== 0) {
     throw new Error('invalid mat for 2-dim vector');
   }
   const result: Array<Vector2D> = [];
-  for(let i = 0; i < data32S.length / 2;i++) {
+  for (let i = 0; i < data32S.length / 2; i++) {
     result.push([data32S[i * 2], data32S[i * 2 + 1]]);
   }
   return result;
-}
+};
 
 const getContoursFromMat = (cv: typeof CV, src: Mat, threshold = 210, onlyExternal = false) => {
   const retrMode = onlyExternal ? cv.RETR_EXTERNAL : cv.RETR_LIST;
@@ -48,7 +53,7 @@ const getContoursFromMat = (cv: typeof CV, src: Mat, threshold = 210, onlyExtern
   cv.findContours(binImg, contours, hierarchy, retrMode, cv.CHAIN_APPROX_NONE);
 
   const allContourPointsList: Array<Array<[number, number]>> = [];
-  for(let i = 0; i < contours.size(); i++) {
+  for (let i = 0; i < contours.size(); i++) {
     allContourPointsList.push(matTo2DVectorArray(contours.get(i)));
   }
 
@@ -60,14 +65,14 @@ const getContoursFromMat = (cv: typeof CV, src: Mat, threshold = 210, onlyExtern
   hierarchy.delete();
 
   return allContourPointsList;
-}
+};
 
 const calcContours = async (src: ImageBitmap, threshold = 210, onlyExternal = false) => {
   const offscreenCanvas = new OffscreenCanvas(src.width, src.height);
   const ctx = offscreenCanvas.getContext('2d') as OffscreenCanvasRenderingContext2D;
   ctx.drawImage(src, 0, 0);
-  
-  const imgData = ctx.getImageData(0,0,src.width, src.height);
+
+  const imgData = ctx.getImageData(0, 0, src.width, src.height);
   const mat = self.cv.matFromImageData(imgData);
 
   const contours = getContoursFromMat(self.cv, mat, threshold, onlyExternal);
@@ -75,12 +80,12 @@ const calcContours = async (src: ImageBitmap, threshold = 210, onlyExternal = fa
   mat.delete();
 
   return contours;
-}
+};
 
 self.addEventListener('message', (ev) => {
   const payload: CalcContourEventPayload = ev.data;
-  if(payload.type === 'calcContours') {
-    calcContours(payload.bitmap, payload.threshold, payload.onlyExternal).then(results => {
+  if (payload.type === 'calcContours') {
+    calcContours(payload.bitmap, payload.threshold, payload.onlyExternal).then((results) => {
       const returnPayload: FinishCalcContourEventPayload = {
         type: 'finishCalcContours',
         contours: results,

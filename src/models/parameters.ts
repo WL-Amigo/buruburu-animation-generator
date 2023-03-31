@@ -1,4 +1,4 @@
-import {z} from 'zod';
+import { z } from 'zod';
 
 export interface ContourGetterParameters {
   threshold: number;
@@ -22,7 +22,10 @@ export interface AnimationEncoderParameters {
   exportFileType: ExportFileTypeEnum;
 }
 
-export interface GeneratorParameters extends ContourGetterParameters, FrameRendererParameters, AnimationEncoderParameters {}
+export interface GeneratorParameters
+  extends ContourGetterParameters,
+    FrameRendererParameters,
+    AnimationEncoderParameters {}
 
 export const createDefaultGeneratorParameters = (): GeneratorParameters => ({
   threshold: 210,
@@ -35,4 +38,4 @@ export const createDefaultGeneratorParameters = (): GeneratorParameters => ({
   variationCount: 10,
   fps: 30,
   exportFileType: 'apng',
-})
+});
