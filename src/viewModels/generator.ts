@@ -17,6 +17,7 @@ export const createGeneratorViewModel = (parameters: Store<GeneratorParameters>)
   createEffect(() => {
     const currentImageBlob = imageBlob();
     if (currentImageBlob === null) {
+      setImageUrl(null);
       return;
     }
 
@@ -43,6 +44,7 @@ export const createGeneratorViewModel = (parameters: Store<GeneratorParameters>)
       variationCount: parameters.variationCount,
       fps: parameters.fps,
       exportFileType: parameters.exportFileType,
+      backgroundColor: parameters.backgroundColor,
     };
 
     if (currentFile === null) {
@@ -52,17 +54,18 @@ export const createGeneratorViewModel = (parameters: Store<GeneratorParameters>)
     (async () => {
       setIsProcessing(true);
       const bitmap = await createImageBitmap(currentFile);
+      const t0 = performance.now();
       const contours = await workerCommunicator.calcContour(bitmap, contoursGetterParameters);
-      const [imageData] = await workerCommunicator.renderFrames(bitmap, contours, {
-        ...frameRendererParameters,
-        variationCount: 1,
-      });
-      const canvas = document.createElement('canvas');
-      canvas.width = imageData.width;
-      canvas.height = imageData.height;
-      const ctx = canvas.getContext('2d')!;
-      ctx.putImageData(imageData, 0, 0);
-      canvas.toBlob(setImageBlob, 'image/png');
+      const t1 = performance.now();
+      console.log(`calcContour: ${(t1 - t0).toFixed(2)}ms`);
+      const imageDataList = await workerCommunicator.renderFrames(bitmap, contours, frameRendererParameters);
+      const t2 = performance.now();
+      console.log(`renderFrames: ${(t2 - t1).toFixed(2)}ms`);
+      const animationFileBlob = await workerCommunicator.encodeAnimation(imageDataList, animationEncoderParameters);
+      const t3 = performance.now();
+      console.log(`encodeAnimation: ${(t3 - t2).toFixed(2)}ms`);
+
+      setImageBlob(animationFileBlob);
 
       bitmap.close();
     })().finally(() => {

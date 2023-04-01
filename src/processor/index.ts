@@ -6,10 +6,16 @@ import {
 } from './types';
 import type { FrameRenderer as FrameRendererWorkerClass } from './worker/wiggler';
 import * as Comlink from 'comlink';
-import { ContourGetterParameters, FrameRendererParameters } from '../models';
+import { AnimationEncoderParameters, ContourGetterParameters, FrameRendererParameters } from '../models';
+import { AnimationEncoderWorker } from './worker/encoder';
 
 const FrameRenderer = Comlink.wrap<typeof FrameRendererWorkerClass>(
-  new Worker(new URL('./worker/index.ts', import.meta.url), {
+  new Worker(new URL('./worker/wiggler.ts', import.meta.url), {
+    type: 'module',
+  })
+);
+const AnimationEncoder = Comlink.wrap<typeof AnimationEncoderWorker>(
+  new Worker(new URL('./worker/encoder/index.ts', import.meta.url), {
     type: 'module',
   })
 );
@@ -17,6 +23,7 @@ const FrameRenderer = Comlink.wrap<typeof FrameRendererWorkerClass>(
 class WorkerCommunicator {
   _cvWorker: Worker;
   _frameRendererWorker: Promise<Comlink.Remote<FrameRendererWorkerClass>>;
+  _animationEncoder: Promise<Comlink.Remote<AnimationEncoderWorker>>;
   _readyPromise: Promise<void>;
 
   constructor() {
@@ -24,6 +31,7 @@ class WorkerCommunicator {
       type: 'classic',
     });
     this._frameRendererWorker = new FrameRenderer();
+    this._animationEncoder = new AnimationEncoder();
     this._readyPromise = new Promise((res) => {
       const listener = (ev: MessageEvent) => {
         const payload: FinishInitOpenCVEventPayload = ev.data;
@@ -37,24 +45,7 @@ class WorkerCommunicator {
     });
   }
 
-  async loadImage(): Promise<ImageData> {
-    throw new Error();
-    // await this._readyPromise;
-
-    // return new Promise<ImageData>((res) => {
-    //   const listener = (ev: MessageEvent) => {
-    //     const payload = ev.data;
-    //     if(payload.type === 'loadFinished' && payload.imgData instanceof ImageData) {
-    //       res(payload.imgData);
-    //       this._cvWorker.removeEventListener('message',listener);
-    //     }
-    //   };
-    //   this._cvWorker.addEventListener('message', listener);
-    //   this._cvWorker.postMessage({type:'loadImage'});
-    // });
-  }
-
-  async calcContour(src: ImageBitmap, parameters: ContourGetterParameters): Promise<Vector2D[][]> {
+  public async calcContour(src: ImageBitmap, parameters: ContourGetterParameters): Promise<Vector2D[][]> {
     await this._readyPromise;
 
     return new Promise<Vector2D[][]>((res) => {
@@ -77,13 +68,21 @@ class WorkerCommunicator {
     });
   }
 
-  async renderFrames(
+  public async renderFrames(
     src: ImageBitmap,
     contours: Vector2D[][],
     parameters: FrameRendererParameters
   ): Promise<ImageData[]> {
     const frameRenderer = await this._frameRendererWorker;
     return await frameRenderer.applyWiggle(src, contours, parameters);
+  }
+
+  public async encodeAnimation(srcList: ImageData[], parameters: AnimationEncoderParameters): Promise<Blob> {
+    const animationEncoder = await this._animationEncoder;
+    const buffer = await animationEncoder.encodeAnimation(srcList, parameters);
+    return new Blob([buffer], {
+      type: 'image/gif',
+    });
   }
 }
 

@@ -70,6 +70,8 @@ const getContoursFromMat = (cv: typeof CV, src: Mat, threshold = 210, onlyExtern
 const calcContours = async (src: ImageBitmap, threshold = 210, onlyExternal = false) => {
   const offscreenCanvas = new OffscreenCanvas(src.width, src.height);
   const ctx = offscreenCanvas.getContext('2d') as OffscreenCanvasRenderingContext2D;
+  ctx.fillStyle = '#FFFFFF';
+  ctx.fillRect(0, 0, src.width, src.height);
   ctx.drawImage(src, 0, 0);
 
   const imgData = ctx.getImageData(0, 0, src.width, src.height);

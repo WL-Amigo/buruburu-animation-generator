@@ -20,6 +20,7 @@ export interface AnimationEncoderParameters {
   variationCount: number;
   fps: number;
   exportFileType: ExportFileTypeEnum;
+  backgroundColor: string;
 }
 
 export interface GeneratorParameters
@@ -32,10 +33,11 @@ export const createDefaultGeneratorParameters = (): GeneratorParameters => ({
   onlyExternal: false,
   isStride: true,
   patchSize: 4,
-  movableLength: 4,
+  movableLength: 2,
   eps: 0.99,
-  std: 0.15,
+  std: 0.2,
   variationCount: 10,
   fps: 30,
-  exportFileType: 'apng',
+  exportFileType: 'gif',
+  backgroundColor: '#ffffff',
 });
