@@ -12,13 +12,10 @@ interface Props {
 }
 export const FileInput: Component<Props> = (props) => {
   return (
-    <div class="relative group">
+    <div class={clsx(windi`relative group`, props.class)}>
       <label
         for={props.id}
-        class={clsx(
-          windi`border-2 border-blue-300 rounded flex flex-col items-center gap-y-2 p-4 group-hover:bg-blue-50`,
-          props.class
-        )}
+        class="w-full h-full flex flex-col items-center gap-y-2 p-4 group-hover:bg-blue-50 cursor-pointer"
       >
         {props.icon}
         <span>画像ファイルを選択</span>

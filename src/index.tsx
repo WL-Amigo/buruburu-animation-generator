@@ -4,6 +4,7 @@ import { render } from 'solid-js/web';
 import 'virtual:windi.css';
 import './index.css';
 import App from './App';
+import { AppViewModelContextProvider } from './viewModels';
 
 const root = document.getElementById('root');
 
@@ -13,4 +14,11 @@ if (import.meta.env.DEV && !(root instanceof HTMLElement)) {
   );
 }
 
-render(() => <App />, root!);
+render(
+  () => (
+    <AppViewModelContextProvider>
+      <App />
+    </AppViewModelContextProvider>
+  ),
+  root!
+);

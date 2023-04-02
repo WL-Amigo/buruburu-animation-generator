@@ -1,4 +1,4 @@
-import { createEffect, createSignal, onCleanup } from 'solid-js';
+import { Accessor, createReaction, createSignal } from 'solid-js';
 import { Store } from 'solid-js/store';
 import {
   AnimationEncoderParameters,
@@ -7,26 +7,24 @@ import {
   GeneratorParameters,
 } from '../models';
 import { workerCommunicator } from '../processor';
+import { removeFileExtension } from '../utils/fileName';
 
-export const createGeneratorViewModel = (parameters: Store<GeneratorParameters>) => {
+export interface GeneratorViewModel {
+  isProcessing: Accessor<boolean>;
+  setFile: (file: File) => void;
+  imageDataList: Accessor<ImageData[]>;
+  runGenerator: () => Promise<void>;
+  isDownloading: Accessor<boolean>;
+  download: () => Promise<void>;
+}
+
+export const createGeneratorViewModel = (parameters: Store<GeneratorParameters>): GeneratorViewModel => {
   const [isProcessing, setIsProcessing] = createSignal(false);
+  const [isDownloading, setIsDownloading] = createSignal(false);
   const [file, setFile] = createSignal<File | null>(null);
-  const [imageBlob, setImageBlob] = createSignal<Blob | null>(null);
-  const [imageUrl, setImageUrl] = createSignal<string | null>(null);
+  const [imageDataList, setImageDataList] = createSignal<ImageData[]>([]);
 
-  createEffect(() => {
-    const currentImageBlob = imageBlob();
-    if (currentImageBlob === null) {
-      setImageUrl(null);
-      return;
-    }
-
-    const imageUrl = URL.createObjectURL(currentImageBlob);
-    setImageUrl(imageUrl);
-    onCleanup(() => URL.revokeObjectURL(imageUrl));
-  });
-
-  createEffect(() => {
+  const runGenerator = async () => {
     const currentFile = file();
     const contoursGetterParameters: ContourGetterParameters = {
       threshold: parameters.threshold,
@@ -40,19 +38,13 @@ export const createGeneratorViewModel = (parameters: Store<GeneratorParameters>)
       std: parameters.std,
       variationCount: parameters.variationCount,
     };
-    const animationEncoderParameters: AnimationEncoderParameters = {
-      variationCount: parameters.variationCount,
-      fps: parameters.fps,
-      exportFileType: parameters.exportFileType,
-      backgroundColor: parameters.backgroundColor,
-    };
 
     if (currentFile === null) {
       return;
     }
 
-    (async () => {
-      setIsProcessing(true);
+    setIsProcessing(true);
+    try {
       const bitmap = await createImageBitmap(currentFile);
       const t0 = performance.now();
       const contours = await workerCommunicator.calcContour(bitmap, contoursGetterParameters);
@@ -61,21 +53,52 @@ export const createGeneratorViewModel = (parameters: Store<GeneratorParameters>)
       const imageDataList = await workerCommunicator.renderFrames(bitmap, contours, frameRendererParameters);
       const t2 = performance.now();
       console.log(`renderFrames: ${(t2 - t1).toFixed(2)}ms`);
-      const animationFileBlob = await workerCommunicator.encodeAnimation(imageDataList, animationEncoderParameters);
-      const t3 = performance.now();
-      console.log(`encodeAnimation: ${(t3 - t2).toFixed(2)}ms`);
-
-      setImageBlob(animationFileBlob);
+      setImageDataList(imageDataList);
 
       bitmap.close();
-    })().finally(() => {
+    } finally {
       setIsProcessing(false);
-    });
+    }
+  };
+
+  const trackToRerunGenerator = createReaction(() => {
+    runGenerator();
   });
+  trackToRerunGenerator(() => file());
+
+  const download = async () => {
+    const currentFile = file();
+    const frames = imageDataList();
+    if (currentFile === null || frames.length === 0) {
+      return;
+    }
+
+    const animationEncoderParameters: AnimationEncoderParameters = {
+      variationCount: parameters.variationCount,
+      fps: parameters.fps,
+      exportFileType: parameters.exportFileType,
+      backgroundColor: parameters.backgroundColor,
+    };
+    setIsDownloading(true);
+    try {
+      const animationFileBlob = await workerCommunicator.encodeAnimation(frames, animationEncoderParameters);
+      const blobUrl = URL.createObjectURL(animationFileBlob);
+      const anchorEl = document.createElement('a');
+      anchorEl.href = blobUrl;
+      anchorEl.download = `${removeFileExtension(currentFile.name)}_buruburu.gif`;
+      anchorEl.click();
+      URL.revokeObjectURL(blobUrl);
+    } finally {
+      setIsDownloading(false);
+    }
+  };
 
   return {
     isProcessing,
     setFile,
-    imageUrl,
+    imageDataList,
+    runGenerator,
+    isDownloading,
+    download,
   };
 };

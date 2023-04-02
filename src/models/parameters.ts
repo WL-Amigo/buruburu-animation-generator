@@ -14,8 +14,25 @@ export interface FrameRendererParameters {
   variationCount: number;
 }
 
-export const ExportFileTypeEnumSchema = z.enum(['gif', 'apng']);
+export const ExportFileTypeEnumSchema = z.enum(['gif', 'apng', 'frames']);
+export const AllExportFileTypeEnum = ExportFileTypeEnumSchema.options;
 export type ExportFileTypeEnum = z.infer<typeof ExportFileTypeEnumSchema>;
+const ExportFileTypeToMimeTypeMap: Readonly<Record<ExportFileTypeEnum, string>> = {
+  gif: 'image/gif',
+  apng: 'image/apng',
+  frames: 'application/zip',
+};
+export const getMimeTypeFromExportFileType = (ft: ExportFileTypeEnum): string => {
+  return ExportFileTypeToMimeTypeMap[ft];
+};
+const ExportFileTypeToFileExtensionMap: Readonly<Record<ExportFileTypeEnum, string>> = {
+  gif: 'gif',
+  apng: 'apng',
+  frames: 'frames.zip',
+};
+export const getFileExtensionFromExportFileType = (ft: ExportFileTypeEnum): string => {
+  return ExportFileTypeToFileExtensionMap[ft];
+};
 export interface AnimationEncoderParameters {
   variationCount: number;
   fps: number;

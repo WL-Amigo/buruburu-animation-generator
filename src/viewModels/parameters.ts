@@ -1,7 +1,13 @@
-import { createStore } from 'solid-js/store';
-import { createDefaultGeneratorParameters } from '../models';
+import { SetStoreFunction, createStore } from 'solid-js/store';
+import { GeneratorParameters, createDefaultGeneratorParameters } from '../models';
 
-export const createGeneratorParametersStore = () => {
+export interface ParametersViewModel {
+  parameters: GeneratorParameters;
+  setParameters: SetStoreFunction<GeneratorParameters>;
+  reset: () => void;
+}
+
+export const createGeneratorParametersStore = (): ParametersViewModel => {
   const [parameters, setParameters] = createStore(createDefaultGeneratorParameters());
   const reset = () => {
     setParameters(createDefaultGeneratorParameters());

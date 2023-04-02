@@ -6,7 +6,12 @@ import {
 } from './types';
 import type { FrameRenderer as FrameRendererWorkerClass } from './worker/wiggler';
 import * as Comlink from 'comlink';
-import { AnimationEncoderParameters, ContourGetterParameters, FrameRendererParameters } from '../models';
+import {
+  AnimationEncoderParameters,
+  ContourGetterParameters,
+  FrameRendererParameters,
+  getMimeTypeFromExportFileType,
+} from '../models';
 import { AnimationEncoderWorker } from './worker/encoder';
 
 const FrameRenderer = Comlink.wrap<typeof FrameRendererWorkerClass>(
@@ -81,7 +86,7 @@ class WorkerCommunicator {
     const animationEncoder = await this._animationEncoder;
     const buffer = await animationEncoder.encodeAnimation(srcList, parameters);
     return new Blob([buffer], {
-      type: 'image/gif',
+      type: getMimeTypeFromExportFileType(parameters.exportFileType),
     });
   }
 }
