@@ -4,6 +4,7 @@ import { AnimationEncoderParameters } from '../models';
 interface Props {
   frames: ImageData[];
   animationEncoderParameters: AnimationEncoderParameters;
+  shouldStop?: boolean;
 }
 export const AnimationPreview: Component<Props> = (props) => {
   const [canvasEl, setCanvasEl] = createSignal<HTMLCanvasElement | null>(null);
@@ -11,7 +12,8 @@ export const AnimationPreview: Component<Props> = (props) => {
     const currentCanvas = canvasEl();
     const frames = props.frames;
     const params = props.animationEncoderParameters;
-    if (currentCanvas === null || frames.length === 0) {
+    const shouldStop = props.shouldStop;
+    if (currentCanvas === null || frames.length === 0 || shouldStop === true) {
       return;
     }
 
