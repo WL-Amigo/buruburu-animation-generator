@@ -1,4 +1,4 @@
-import { Accessor, createReaction, createSignal } from 'solid-js';
+import { Accessor, createEffect, createSignal, untrack } from 'solid-js';
 import { Store } from 'solid-js/store';
 import {
   AnimationEncoderParameters,
@@ -61,10 +61,12 @@ export const createGeneratorViewModel = (parameters: Store<GeneratorParameters>)
     }
   };
 
-  const trackToRerunGenerator = createReaction(() => {
-    runGenerator();
+  createEffect(() => {
+    file();
+    untrack(() => {
+      runGenerator();
+    });
   });
-  trackToRerunGenerator(() => file());
 
   const download = async () => {
     const currentFile = file();
