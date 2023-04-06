@@ -13,6 +13,8 @@ import {
   getMimeTypeFromExportFileType,
 } from '../models';
 import { AnimationEncoderWorker } from './worker/encoder';
+import { PreviewContourWorker } from './worker/previewContour';
+import { getOffscreenContext2D } from '../utils';
 
 const FrameRenderer = Comlink.wrap<typeof FrameRendererWorkerClass>(
   new Worker(new URL('./worker/wiggler.ts', import.meta.url), {
@@ -24,12 +26,18 @@ const AnimationEncoder = Comlink.wrap<typeof AnimationEncoderWorker>(
     type: 'module',
   })
 );
+const PreviewContour = Comlink.wrap<typeof PreviewContourWorker>(
+  new Worker(new URL('./worker/previewContour.ts', import.meta.url), {
+    type: 'module',
+  })
+);
 
 class WorkerCommunicator {
-  _cvWorker: Worker;
-  _frameRendererWorker: Promise<Comlink.Remote<FrameRendererWorkerClass>>;
-  _animationEncoder: Promise<Comlink.Remote<AnimationEncoderWorker>>;
-  _readyPromise: Promise<void>;
+  private readonly _cvWorker: Worker;
+  private readonly _frameRendererWorker: Promise<Comlink.Remote<FrameRendererWorkerClass>>;
+  private readonly _animationEncoder: Promise<Comlink.Remote<AnimationEncoderWorker>>;
+  private readonly _previewContour: Promise<Comlink.Remote<PreviewContourWorker>>;
+  private readonly _readyPromise: Promise<void>;
 
   constructor() {
     this._cvWorker = new Worker(new URL('./worker/calcContour.ts', import.meta.url), {
@@ -37,6 +45,7 @@ class WorkerCommunicator {
     });
     this._frameRendererWorker = new FrameRenderer();
     this._animationEncoder = new AnimationEncoder();
+    this._previewContour = new PreviewContour();
     this._readyPromise = new Promise((res) => {
       const listener = (ev: MessageEvent) => {
         const payload: FinishInitOpenCVEventPayload = ev.data;
@@ -71,6 +80,28 @@ class WorkerCommunicator {
       };
       this._cvWorker.postMessage(payload);
     });
+  }
+
+  public async previewContour(
+    dest: HTMLCanvasElement,
+    src: ImageBitmap,
+    contours: Vector2D[][],
+    width: number,
+    height: number
+  ) {
+    const previewContour = await this._previewContour;
+    const overlay = await previewContour.getContourLinesOverlay(contours, width, height);
+
+    const baseCanvas = new OffscreenCanvas(width, height);
+    const ctx = getOffscreenContext2D(baseCanvas);
+    ctx.drawImage(src, 0, 0);
+    ctx.fillStyle = '#FFFFFF80';
+    ctx.fillRect(0, 0, width, height);
+    const copyCanvas = new OffscreenCanvas(width, height);
+    getOffscreenContext2D(copyCanvas).putImageData(overlay, 0, 0);
+    ctx.drawImage(copyCanvas, 0, 0);
+
+    dest.getContext('2d')?.putImageData(ctx.getImageData(0, 0, width, height), 0, 0);
   }
 
   public async renderFrames(

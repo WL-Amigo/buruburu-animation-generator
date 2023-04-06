@@ -1,4 +1,4 @@
-import { Accessor, createEffect, createSignal, untrack } from 'solid-js';
+import { Accessor, createEffect, createSignal, onCleanup, untrack } from 'solid-js';
 import { Store } from 'solid-js/store';
 import {
   AnimationEncoderParameters,
@@ -12,6 +12,7 @@ import { removeFileExtension } from '../utils/fileName';
 export interface GeneratorViewModel {
   isProcessing: Accessor<boolean>;
   setFile: (file: File) => void;
+  imageBitmap: Accessor<ImageBitmap | null>;
   imageDataList: Accessor<ImageData[]>;
   runGenerator: () => Promise<void>;
   isDownloading: Accessor<boolean>;
@@ -22,10 +23,26 @@ export const createGeneratorViewModel = (parameters: Store<GeneratorParameters>)
   const [isProcessing, setIsProcessing] = createSignal(false);
   const [isDownloading, setIsDownloading] = createSignal(false);
   const [file, setFile] = createSignal<File | null>(null);
+  const [currentImageBitmap, setImageBitmap] = createSignal<ImageBitmap | null>(null);
   const [imageDataList, setImageDataList] = createSignal<ImageData[]>([]);
 
-  const runGenerator = async () => {
+  createEffect(() => {
     const currentFile = file();
+    if (currentFile === null) {
+      setImageBitmap(null);
+      return;
+    }
+    createImageBitmap(currentFile).then((ib) => setImageBitmap(ib));
+  });
+  createEffect(() => {
+    const bitmap = currentImageBitmap();
+    if (bitmap === null) {
+      return;
+    }
+    onCleanup(() => bitmap.close());
+  });
+
+  const runGenerator = async (bitmap: ImageBitmap) => {
     const contoursGetterParameters: ContourGetterParameters = {
       threshold: parameters.threshold,
       onlyExternal: parameters.onlyExternal,
@@ -39,13 +56,8 @@ export const createGeneratorViewModel = (parameters: Store<GeneratorParameters>)
       variationCount: parameters.variationCount,
     };
 
-    if (currentFile === null) {
-      return;
-    }
-
     setIsProcessing(true);
     try {
-      const bitmap = await createImageBitmap(currentFile);
       const t0 = performance.now();
       const contours = await workerCommunicator.calcContour(bitmap, contoursGetterParameters);
       const t1 = performance.now();
@@ -54,17 +66,18 @@ export const createGeneratorViewModel = (parameters: Store<GeneratorParameters>)
       const t2 = performance.now();
       console.log(`renderFrames: ${(t2 - t1).toFixed(2)}ms`);
       setImageDataList(imageDataList);
-
-      bitmap.close();
     } finally {
       setIsProcessing(false);
     }
   };
 
   createEffect(() => {
-    file();
+    const bitmap = currentImageBitmap();
+    if (bitmap === null) {
+      return;
+    }
     untrack(() => {
-      runGenerator();
+      runGenerator(bitmap);
     });
   });
 
@@ -98,8 +111,15 @@ export const createGeneratorViewModel = (parameters: Store<GeneratorParameters>)
   return {
     isProcessing,
     setFile,
+    imageBitmap: currentImageBitmap,
     imageDataList,
-    runGenerator,
+    runGenerator: async () => {
+      const bitmap = currentImageBitmap();
+      if (bitmap === null) {
+        return;
+      }
+      await runGenerator(bitmap);
+    },
     isDownloading,
     download,
   };

@@ -20,6 +20,7 @@ specifiers:
   prettier: ^2.8.7
   solid-headless: ^0.13.1
   solid-js: ^1.6.10
+  solid-transition-group: ^0.2.2
   typescript: ^5.0.2
   unplugin-icons: ^0.16.1
   vite: ^4.1.1
@@ -39,6 +40,7 @@ dependencies:
   opencv-ts: 1.3.6
   solid-headless: 0.13.1_solid-js@1.6.15
   solid-js: 1.6.15
+  solid-transition-group: 0.2.2_solid-js@1.6.15
   zod: 3.21.4
 
 devDependencies:
@@ -731,6 +733,31 @@ packages:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.15.0
     dev: true
+
+  /@solid-primitives/refs/1.0.2_solid-js@1.6.15:
+    resolution: {integrity: sha512-qnqQRdYbsENlVx86QCfftRKGZ/9zUJMGK9U85xDRymocEyeUXxdxgq0FeyGhvgg4A25spJVwHmuZUGY0aMBBLA==}
+    peerDependencies:
+      solid-js: ^1.6.12
+    dependencies:
+      '@solid-primitives/utils': 6.0.0_solid-js@1.6.15
+      solid-js: 1.6.15
+    dev: false
+
+  /@solid-primitives/transition-group/1.0.1_solid-js@1.6.15:
+    resolution: {integrity: sha512-StVQs7BVGQa1uo6dD19wqOgfGMxu3gL/bvPHUV/NBJaiNX5R5e7dPb6lz6zR1RdTho3M+3Mv8jUHKd/aKuhL4w==}
+    peerDependencies:
+      solid-js: ^1.6.12
+    dependencies:
+      solid-js: 1.6.15
+    dev: false
+
+  /@solid-primitives/utils/6.0.0_solid-js@1.6.15:
+    resolution: {integrity: sha512-SSu12+vvU6J8SVWW9eGV+dqiMsc0WG1Oy8YYY9AWzRzssmzNXg/uexaW+0eqTuj8JcRAaGplMDjhraB01HOidA==}
+    peerDependencies:
+      solid-js: ^1.6.12
+    dependencies:
+      solid-js: 1.6.15
+    dev: false
 
   /@techstark/opencv-js/4.7.0-release.1:
     resolution: {integrity: sha512-pzvPJlNOP2k8raHPucxrqMDNkoKqpBuQ4T8XNhx+dT87OiKhMZCgbhLf3mHMNiUqiIDyS7s82noqqq4z0gFohw==}
@@ -2428,6 +2455,16 @@ packages:
       '@babel/types': 7.21.3
       solid-js: 1.6.15
     dev: true
+
+  /solid-transition-group/0.2.2_solid-js@1.6.15:
+    resolution: {integrity: sha512-6nB90UM2PB6VsIo/UCkmZmlIJb9mnmP7QPGrePqQJWtpUiRs5PbhkB8fvdyv9g/RPHWYpdJhQgxL6n++WmTt5A==}
+    peerDependencies:
+      solid-js: ^1.6.12
+    dependencies:
+      '@solid-primitives/refs': 1.0.2_solid-js@1.6.15
+      '@solid-primitives/transition-group': 1.0.1_solid-js@1.6.15
+      solid-js: 1.6.15
+    dev: false
 
   /solid-use/0.6.2_solid-js@1.6.15:
     resolution: {integrity: sha512-0ShJ5s+4PIN0pJB/BtsQucsZB+xnUeeTGaxErQDu6USn5jygZWXicAtOEvFbI8gv40xE751uY1Tz7Aib9lxL/Q==}

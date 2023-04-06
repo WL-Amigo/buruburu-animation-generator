@@ -1,26 +1,21 @@
-import { Component } from 'solid-js';
+import { Component, createSignal } from 'solid-js';
 import { NumberStepper, RadioGroup } from '../components/inputs';
 import { useAppViewModel } from '../viewModels';
 import { AllExportFileTypeEnum } from '../models';
 import clsx from 'clsx';
 import { windi } from '../windi';
-import { SliderInput } from '../components/inputs/Slider';
+import { ContourGetterConfigDialog } from './ContourGetterConfigDialog';
 
 export const BasicConfig: Component<{ class?: string }> = (props) => {
   const { parameters, setParameters, reset } = useAppViewModel();
+  const [isContourGetterConfigDialogOpen, setContourGetterConfigDialogOpen] = createSignal(false);
 
   return (
     <div class={clsx(windi`w-full p-2 overflow-y-auto overflow-x-hidden flex flex-col gap-y-4`, props.class)}>
-      <SliderInput
-        id="threshold"
-        label="境界検出で使うしきい値"
-        min={1}
-        max={254}
-        step={1}
-        value={parameters.threshold}
-        onChange={(v) => {
-          setParameters('threshold', () => v);
-        }}
+      <button onClick={() => setContourGetterConfigDialogOpen(true)}>輪郭検出を調整</button>
+      <ContourGetterConfigDialog
+        open={isContourGetterConfigDialogOpen()}
+        onCloseRequested={() => setContourGetterConfigDialogOpen(false)}
       />
       <NumberStepper
         id="patch-size"
