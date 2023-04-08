@@ -8,7 +8,7 @@ interface Props<OptionsType extends string> {
   label: string;
   value: OptionsType;
   setValue: (next: OptionsType) => void;
-  options: OptionsType[];
+  options: readonly OptionsType[];
   optionLabelGetter: (opt: OptionsType) => string;
 }
 export const RadioGroup = <OptionsType extends string>(props: Props<OptionsType>): JSX.Element => {

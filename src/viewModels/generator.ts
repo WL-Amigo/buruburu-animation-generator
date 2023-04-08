@@ -12,6 +12,7 @@ import { removeFileExtension } from '../utils/fileName';
 export interface GeneratorViewModel {
   isProcessing: Accessor<boolean>;
   setFile: (file: File) => void;
+  hasFile: Accessor<boolean>;
   imageBitmap: Accessor<ImageBitmap | null>;
   imageDataList: Accessor<ImageData[]>;
   runGenerator: () => Promise<void>;
@@ -112,6 +113,7 @@ export const createGeneratorViewModel = (parameters: Store<GeneratorParameters>)
   return {
     isProcessing,
     setFile,
+    hasFile: () => file() !== null,
     imageBitmap: currentImageBitmap,
     imageDataList,
     runGenerator: async () => {

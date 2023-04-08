@@ -23,6 +23,7 @@ specifiers:
   solid-transition-group: ^0.2.2
   typescript: ^5.0.2
   unplugin-icons: ^0.16.1
+  vanilla-colorful: ^0.7.2
   vite: ^4.1.1
   vite-plugin-solid: ^2.5.0
   vite-plugin-windicss: ^1.8.10
@@ -41,6 +42,7 @@ dependencies:
   solid-headless: 0.13.1_solid-js@1.6.15
   solid-js: 1.6.15
   solid-transition-group: 0.2.2_solid-js@1.6.15
+  vanilla-colorful: 0.7.2
   zod: 3.21.4
 
 devDependencies:
@@ -2679,6 +2681,10 @@ packages:
   /validate-html-nesting/1.2.1:
     resolution: {integrity: sha512-T1ab131NkP3BfXB7KUSgV7Rhu81R2id+L6NaJ7NypAAG5iV6gXnPpQE5RK1fvb+3JYsPTL+ihWna5sr5RN9gaQ==}
     dev: true
+
+  /vanilla-colorful/0.7.2:
+    resolution: {integrity: sha512-z2YZusTFC6KnLERx1cgoIRX2CjPRP0W75N+3CC6gbvdX5Ch47rZkEMGO2Xnf+IEmi3RiFLxS18gayMA27iU7Kg==}
+    dev: false
 
   /vite-plugin-solid/2.6.1_solid-js@1.6.15+vite@4.2.1:
     resolution: {integrity: sha512-/khM/ha3B5/pTWQWVJd/0n6ODPIrOcajwhbrD8Gnv37XmJJssu+KA8ssN73raMIicf2eiQKiTAV39w7dSl4Irg==}

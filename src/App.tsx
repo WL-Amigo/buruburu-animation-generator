@@ -17,7 +17,7 @@ const App: Component = () => {
           />
         </Show>
       </div>
-      <div class="flex-[4] flex flex-col justify-center items-center">
+      <div class="flex-[4] flex flex-col justify-center items-center overflow-y-hidden">
         <BasicConfig class="flex-1" />
         <MainActions class="border-t" />
       </div>

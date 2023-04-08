@@ -6,6 +6,8 @@ import IconMinus from '~icons/bx/minus';
 import IconPlus from '~icons/bx/plus';
 import IconCheckbox from '~icons/bx/square';
 import IconCheckboxChecked from '~icons/bxs/check-square';
+import IconChevronDown from '~icons/bx/chevron-down';
+import IconChevronUp from '~icons/bx/chevron-up';
 
 export {
   IconRadioCircle,
@@ -16,4 +18,6 @@ export {
   IconPlus,
   IconCheckbox,
   IconCheckboxChecked,
+  IconChevronDown,
+  IconChevronUp,
 };

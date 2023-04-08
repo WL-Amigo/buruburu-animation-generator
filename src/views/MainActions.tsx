@@ -3,20 +3,25 @@ import { useAppViewModel } from '../viewModels';
 import clsx from 'clsx';
 import { windi } from '../windi';
 import { FileInput } from '../components/inputs';
+import { ActionButton } from '../components/Button';
 
 export const MainActions: Component<{ class?: string }> = (props) => {
-  const { setFile, runGenerator, isProcessing, download, isDownloading } = useAppViewModel();
+  const { setFile, hasFile, runGenerator, isProcessing, download, isDownloading } = useAppViewModel();
 
   return (
     <div class={clsx(windi`flex flex-col w-full items-stretch`, props.class)}>
-      <button class="p-4" onClick={() => runGenerator()} disabled={isProcessing() || isDownloading()}>
+      <ActionButton onClick={() => runGenerator()} disabled={!hasFile() || isProcessing() || isDownloading()}>
         アニメーション再生成
-      </button>
+      </ActionButton>
       <div class="flex flex-row w-full border-t">
         <FileInput id="image-file-input" accept="image/*" onInputFile={setFile} class="flex-1 border-none" />
-        <button class="flex-1 py-4 border-l" onClick={() => download()} disabled={isDownloading() || isProcessing()}>
+        <ActionButton
+          class="flex-1 border-l"
+          onClick={() => download()}
+          disabled={!hasFile() || isDownloading() || isProcessing()}
+        >
           ダウンロード
-        </button>
+        </ActionButton>
       </div>
     </div>
   );

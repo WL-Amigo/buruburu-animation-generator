@@ -47,7 +47,7 @@ const createNumberMask = (
   return inputMask;
 };
 
-const StepButtonClasses = windi`border rounded border-primary-500 bg-primary-500 text-white flex flex-row justify-center items-center w-10`;
+const StepButtonClasses = windi`border rounded border-primary-500 bg-primary-500 hover:bg-primary-400 text-white flex flex-row justify-center items-center w-8`;
 
 interface Props extends NumberMaskConfig {
   id: string;
@@ -85,17 +85,21 @@ export const NumberStepper: Component<Props> = (props) => {
 
   const onClickMinus = () => {
     const min = props.min ?? DefaultMin;
-    props.onChange(Math.max(min, props.value - props.step));
+    const nextRaw = Math.max(min, props.value - props.step);
+    const next = Math.round(nextRaw / props.step) * props.step;
+    props.onChange(next);
   };
   const onClickPlus = () => {
     const max = props.max ?? DefaultMax;
-    props.onChange(Math.min(max, props.value + props.step));
+    const nextRaw = Math.min(max, props.value + props.step);
+    const next = Math.round(nextRaw / props.step) * props.step;
+    props.onChange(next);
   };
 
   return (
     <div>
       <label for={props.id}>{props.label}</label>
-      <div class="flex flex-row gap-x-1 items-stretch w-full mt-2 max-w-[240px] h-10">
+      <div class="flex flex-row gap-x-1 items-stretch w-full mt-2 max-w-[240px] h-8">
         <button class={StepButtonClasses} onClick={onClickMinus}>
           <IconMinus />
         </button>

@@ -15,7 +15,7 @@ export const FileInput: Component<Props> = (props) => {
     <div class={clsx(windi`relative group`, props.class)}>
       <label
         for={props.id}
-        class="w-full h-full flex flex-col items-center gap-y-2 p-4 group-hover:bg-blue-50 cursor-pointer"
+        class="w-full h-full flex flex-col items-center gap-y-2 py-3 group-hover:bg-blue-50 cursor-pointer"
       >
         {props.icon}
         <span>画像ファイルを選択</span>

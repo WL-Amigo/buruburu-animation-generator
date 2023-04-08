@@ -14,6 +14,7 @@ const AppViewModelContext = createContext<AppViewModel>({
   isProcessing: () => false,
   runGenerator: () => Promise.resolve(),
   setFile: noop,
+  hasFile: () => false,
   imageBitmap: () => null,
   isDownloading: () => false,
   download: () => Promise.resolve(),
