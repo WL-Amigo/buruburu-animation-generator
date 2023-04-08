@@ -1,8 +1,10 @@
 import { z } from 'zod';
+import { ContourExtractionBasisType } from '../processor/types';
 
 export interface ContourGetterParameters {
   threshold: number;
   onlyExternal: boolean;
+  contourExtractionBasis: ContourExtractionBasisType;
 }
 
 export interface FrameRendererParameters {
@@ -48,6 +50,7 @@ export interface GeneratorParameters
 export const createDefaultGeneratorParameters = (): GeneratorParameters => ({
   threshold: 210,
   onlyExternal: false,
+  contourExtractionBasis: 'brightness',
   isStride: true,
   patchSize: 4,
   movableLength: 2,

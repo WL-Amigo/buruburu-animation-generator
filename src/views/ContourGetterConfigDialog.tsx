@@ -5,10 +5,13 @@ import { ContourPreview } from '../components/ContourPreview';
 import { SliderInput } from '../components/inputs/Slider';
 import { ContourGetterParameters } from '../models';
 import { CheckBoxInput } from '../components/inputs/CheckBox';
+import { RadioGroup } from '../components/inputs';
+import { ContourExtractionBasisOptions, ContourExtractionBasisType } from '../processor/types';
 
 const getContourGetterParameters = (source: ContourGetterParameters): ContourGetterParameters => ({
   threshold: source.threshold,
   onlyExternal: source.onlyExternal,
+  contourExtractionBasis: source.contourExtractionBasis,
 });
 
 interface Props {
@@ -54,6 +57,20 @@ export const ContourGetterConfigDialog: Component<Props> = (props) => {
               value={localParams().onlyExternal}
               onChange={(next) => setLocalParams((prev) => ({ ...prev, onlyExternal: next }))}
             />
+            <RadioGroup<ContourExtractionBasisType>
+              label="輪郭抽出の基準"
+              options={ContourExtractionBasisOptions}
+              optionLabelGetter={(opt) => {
+                switch (opt) {
+                  case 'brightness':
+                    return '明度';
+                  case 'grayscale':
+                    return 'グレースケール';
+                }
+              }}
+              value={localParams().contourExtractionBasis}
+              setValue={(next) => setLocalParams((prev) => ({ ...prev, contourExtractionBasis: next }))}
+            />
           </div>
           <div class="flex flex-row">
             <button class="flex-1 border-r" onClick={() => props.onCloseRequested()}>
@@ -65,6 +82,7 @@ export const ContourGetterConfigDialog: Component<Props> = (props) => {
                 const nextParams = localParams();
                 setParameters('threshold', () => nextParams.threshold);
                 setParameters('onlyExternal', () => nextParams.onlyExternal);
+                setParameters('contourExtractionBasis', () => nextParams.contourExtractionBasis);
                 props.onCloseRequested();
               }}
             >

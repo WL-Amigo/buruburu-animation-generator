@@ -46,6 +46,7 @@ export const createGeneratorViewModel = (parameters: Store<GeneratorParameters>)
     const contoursGetterParameters: ContourGetterParameters = {
       threshold: parameters.threshold,
       onlyExternal: parameters.onlyExternal,
+      contourExtractionBasis: parameters.contourExtractionBasis,
     };
     const frameRendererParameters: FrameRendererParameters = {
       isStride: parameters.isStride,

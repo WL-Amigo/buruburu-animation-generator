@@ -76,6 +76,7 @@ class WorkerCommunicator {
         type: 'calcContours',
         threshold: parameters.threshold,
         onlyExternal: parameters.onlyExternal,
+        contourExtractionBasis: parameters.contourExtractionBasis,
         bitmap: src,
       };
       this._cvWorker.postMessage(payload);

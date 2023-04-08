@@ -2,6 +2,7 @@ import type CV from 'opencv-ts';
 import type { Mat } from 'opencv-ts';
 import type {
   CalcContourEventPayload,
+  ContourExtractionBasisType,
   FinishCalcContourEventPayload,
   FinishInitOpenCVEventPayload,
   Vector2D,
@@ -34,19 +35,41 @@ const matTo2DVectorArray = (src: Mat): Array<Vector2D> => {
   return result;
 };
 
-const getContoursFromMat = (cv: typeof CV, src: Mat, threshold = 210, onlyExternal = false) => {
+const preprocessImageForExtractContours = (cv: typeof CV, src: Mat, basisType: ContourExtractionBasisType): Mat => {
+  if (basisType === 'brightness') {
+    const imgBGR = new cv.Mat();
+    cv.cvtColor(src, imgBGR, cv.COLOR_BGRA2BGR);
+    const imgHSV = new cv.Mat();
+    cv.cvtColor(imgBGR, imgHSV, cv.COLOR_BGR2HSV);
+    const hsvVector = new cv.MatVector();
+    cv.split(imgHSV, hsvVector);
+
+    const result = hsvVector.get(2);
+    imgBGR.delete();
+    imgHSV.delete();
+    hsvVector.delete();
+    return result;
+  } else if (basisType === 'grayscale') {
+    const imgGray = new cv.Mat();
+    cv.cvtColor(src, imgGray, cv.COLOR_BGRA2GRAY);
+    return imgGray;
+  }
+
+  throw new Error('invalid contour extraction basis type');
+};
+
+const getContoursFromMat = (
+  cv: typeof CV,
+  src: Mat,
+  threshold = 210,
+  onlyExternal = false,
+  basisType: ContourExtractionBasisType
+) => {
   const retrMode = onlyExternal ? cv.RETR_EXTERNAL : cv.RETR_LIST;
 
-  const imgBGR = new cv.Mat();
-  cv.cvtColor(src, imgBGR, cv.COLOR_BGRA2BGR);
-  const imgHSV = new cv.Mat();
-  cv.cvtColor(imgBGR, imgHSV, cv.COLOR_BGR2HSV);
-
-  const hsvVector = new cv.MatVector();
-  cv.split(imgHSV, hsvVector);
+  const binImgBase = preprocessImageForExtractContours(cv, src, basisType);
   const binImg = new cv.Mat();
-  cv.threshold(hsvVector.get(2), binImg, threshold, 255, cv.THRESH_BINARY);
-  cv.bitwise_not(binImg, binImg);
+  cv.threshold(binImgBase, binImg, threshold, 255, cv.THRESH_BINARY_INV);
 
   const contours = new cv.MatVector();
   const hierarchy = new cv.Mat();
@@ -57,9 +80,7 @@ const getContoursFromMat = (cv: typeof CV, src: Mat, threshold = 210, onlyExtern
     allContourPointsList.push(matTo2DVectorArray(contours.get(i)));
   }
 
-  imgBGR.delete();
-  imgHSV.delete();
-  hsvVector.delete();
+  binImgBase.delete();
   binImg.delete();
   contours.delete();
   hierarchy.delete();
@@ -67,7 +88,8 @@ const getContoursFromMat = (cv: typeof CV, src: Mat, threshold = 210, onlyExtern
   return allContourPointsList;
 };
 
-const calcContours = async (src: ImageBitmap, threshold = 210, onlyExternal = false) => {
+const calcContours = async (payload: CalcContourEventPayload) => {
+  const { bitmap: src, threshold, onlyExternal, contourExtractionBasis } = payload;
   const offscreenCanvas = new OffscreenCanvas(src.width, src.height);
   const ctx = offscreenCanvas.getContext('2d') as OffscreenCanvasRenderingContext2D;
   ctx.fillStyle = '#FFFFFF';
@@ -77,7 +99,7 @@ const calcContours = async (src: ImageBitmap, threshold = 210, onlyExternal = fa
   const imgData = ctx.getImageData(0, 0, src.width, src.height);
   const mat = self.cv.matFromImageData(imgData);
 
-  const contours = getContoursFromMat(self.cv, mat, threshold, onlyExternal);
+  const contours = getContoursFromMat(self.cv, mat, threshold, onlyExternal, contourExtractionBasis);
 
   mat.delete();
 
@@ -87,7 +109,7 @@ const calcContours = async (src: ImageBitmap, threshold = 210, onlyExternal = fa
 self.addEventListener('message', (ev) => {
   const payload: CalcContourEventPayload = ev.data;
   if (payload.type === 'calcContours') {
-    calcContours(payload.bitmap, payload.threshold, payload.onlyExternal).then((results) => {
+    calcContours(payload).then((results) => {
       const returnPayload: FinishCalcContourEventPayload = {
         type: 'finishCalcContours',
         contours: results,
