@@ -128,7 +128,10 @@ export class FrameRenderer {
       results.push(getContext2D(appliedCanvas).getImageData(0, 0, appliedCanvas.width, appliedCanvas.height));
     }
 
-    return results;
+    return Comlink.transfer(
+      results,
+      results.map((id) => id.data.buffer)
+    );
   }
 }
 Comlink.expose(FrameRenderer);
