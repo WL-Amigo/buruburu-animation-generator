@@ -4,6 +4,7 @@ import { ModalBase } from '../components/ModalBase';
 import { ContourPreview } from '../components/ContourPreview';
 import { SliderInput } from '../components/inputs/Slider';
 import { ContourGetterParameters } from '../models';
+import { CheckBoxInput } from '../components/inputs/CheckBox';
 
 const getContourGetterParameters = (source: ContourGetterParameters): ContourGetterParameters => ({
   threshold: source.threshold,
@@ -48,9 +49,14 @@ export const ContourGetterConfigDialog: Component<Props> = (props) => {
               step={1}
               onChange={(next) => setLocalParams((prev) => ({ ...prev, threshold: next }))}
             />
+            <CheckBoxInput
+              label="できるだけ外側の輪郭だけ抽出する"
+              value={localParams().onlyExternal}
+              onChange={(next) => setLocalParams((prev) => ({ ...prev, onlyExternal: next }))}
+            />
           </div>
           <div class="flex flex-row">
-            <button class="flex-1 border-r" onClick={props.onCloseRequested}>
+            <button class="flex-1 border-r" onClick={() => props.onCloseRequested()}>
               キャンセル
             </button>
             <button
