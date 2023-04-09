@@ -49,5 +49,5 @@ export const AnimationPreview: Component<Props> = (props) => {
     onCleanup(() => window.clearInterval(intervalId));
   });
 
-  return <canvas ref={setCanvasEl} class="w-full h-full object-scale-down" />;
+  return <canvas ref={setCanvasEl} class="w-full h-full object-scale-down pointer-events-none" />;
 };
