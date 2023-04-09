@@ -6,6 +6,7 @@ import { createFileDragAndDropHandlers } from './compositions/fileDnd';
 import { IconImageAdd } from './components/icons';
 import clsx from 'clsx';
 import { windi } from './windi';
+import { Loading } from './components/Loading';
 
 const App: Component = () => {
   const { imageDataList, parameters, setFile, isProcessing, isDownloading } = useAppViewModel();
@@ -29,6 +30,16 @@ const App: Component = () => {
             shouldStop={isProcessing() || isDownloading()}
           />
         </Show>
+        <Loading
+          class="absolute bottom-0 left-0 right-0 w-full bg-white/75 py-8"
+          isLoading={isProcessing()}
+          text="フレーム生成中…"
+        />
+        <Loading
+          class="absolute bottom-0 left-0 right-0 w-full bg-white/75 py-8"
+          isLoading={isDownloading()}
+          text="ファイル書き出し中…"
+        />
         <div
           class={clsx(
             windi`absolute inset-0 flex-col justify-center items-center bg-primary-500/10 pointer-events-none`,
