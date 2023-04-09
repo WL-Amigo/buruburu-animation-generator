@@ -9,6 +9,7 @@ import IconCheckboxChecked from '~icons/bxs/check-square';
 import IconChevronDown from '~icons/bx/chevron-down';
 import IconChevronUp from '~icons/bx/chevron-up';
 import IconImageAdd from '~icons/bx/image-add';
+import IconWindowClose from '~icons/bx/window-close';
 
 export {
   IconRadioCircle,
@@ -22,4 +23,5 @@ export {
   IconChevronDown,
   IconChevronUp,
   IconImageAdd,
+  IconWindowClose,
 };

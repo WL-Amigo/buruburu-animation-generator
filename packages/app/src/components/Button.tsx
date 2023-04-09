@@ -4,7 +4,7 @@ import { windi } from '../windi';
 
 export type ButtonColorVariant = 'default' | 'primary' | 'danger';
 const ColorVariantToClassMap: Record<ButtonColorVariant, string> = {
-  default: windi`bg-white hover:bg-gray-50 disabled:text-gray-400 disabled:hover:bg-white`,
+  default: windi`border bg-white hover:bg-gray-50 disabled:text-gray-400 disabled:hover:bg-white`,
   primary: windi`bg-primary-500 hover:bg-primary-400 text-white disabled:opacity-50 disabled:hover:bg-primary-500`,
   danger: windi`bg-red-400 hover:bg-red-300 text-white disabled:opacity-50 disabled:hover:bg-red-400`,
 };

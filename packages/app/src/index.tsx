@@ -5,6 +5,7 @@ import 'virtual:windi.css';
 import './index.css';
 import App from './App';
 import { AppViewModelContextProvider } from './viewModels';
+import { Bootstrap } from './bootstrap';
 
 const root = document.getElementById('root');
 
@@ -17,7 +18,9 @@ if (import.meta.env.DEV && !(root instanceof HTMLElement)) {
 render(
   () => (
     <AppViewModelContextProvider>
-      <App />
+      <Bootstrap>
+        <App />
+      </Bootstrap>
     </AppViewModelContextProvider>
   ),
   root!
