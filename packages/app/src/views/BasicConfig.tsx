@@ -151,13 +151,19 @@ export const BasicConfig: Component<{ class?: string }> = (props) => {
           />
           <NumberStepper
             id="stddev"
-            label="動かす量を決める乱数の標準偏差"
+            label="動かす量を決める乱数の分散"
             value={parameters.std}
             onChange={(v) => setParameters('std', () => v)}
             scale={2}
             step={0.01}
             min={0.01}
             max={1.0}
+            tooltip={
+              <div class="flex flex-col items-start">
+                <span>動かす量を決める乱数は正規分布に従うようになっています(ただし出力を [-1,1] に制限)。</span>
+                <span>大きくすると動かす量が最大値に偏るようになります。</span>
+              </div>
+            }
           />
           <NumberStepper
             id="variation-count"

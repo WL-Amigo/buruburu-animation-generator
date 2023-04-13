@@ -1,7 +1,8 @@
-import { Accessor, Component, createEffect, createSignal, onCleanup } from 'solid-js';
+import { Accessor, Component, JSX, createEffect, createSignal, onCleanup } from 'solid-js';
 import IMask from 'imask';
 import { IconMinus, IconPlus } from '../icons';
 import { windi } from '../../windi';
+import { HelpTooltip } from '../Tooltip';
 
 const DefaultMin = 0;
 const DefaultMax = 9999;
@@ -55,6 +56,7 @@ interface Props extends NumberMaskConfig {
   step: number;
   value: number;
   onChange: (next: number) => void;
+  tooltip?: JSX.Element;
 }
 export const NumberStepper: Component<Props> = (props) => {
   const [inputEl, setInputEl] = createSignal<HTMLInputElement | null>(null);
@@ -98,7 +100,10 @@ export const NumberStepper: Component<Props> = (props) => {
 
   return (
     <div>
-      <label for={props.id}>{props.label}</label>
+      <label for={props.id} class="flex flex-row gap-x-2 items-center">
+        <span>{props.label}</span>
+        {props.tooltip !== undefined && <HelpTooltip>{props.tooltip}</HelpTooltip>}
+      </label>
       <div class="flex flex-row gap-x-1 items-stretch w-full mt-2 max-w-[240px] h-8">
         <button class={StepButtonClasses} onClick={onClickMinus}>
           <IconMinus />
