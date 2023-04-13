@@ -11,6 +11,8 @@ import IconChevronUp from '~icons/bx/chevron-up';
 import IconImageAdd from '~icons/bx/image-add';
 import IconWindowClose from '~icons/bx/window-close';
 import IconHelp from '~icons/bxs/help-circle';
+import IconRefresh from '~icons/bx/refresh';
+import IconSave from '~icons/bxs/save';
 
 export {
   IconRadioCircle,
@@ -26,4 +28,6 @@ export {
   IconImageAdd,
   IconWindowClose,
   IconHelp,
+  IconRefresh,
+  IconSave,
 };

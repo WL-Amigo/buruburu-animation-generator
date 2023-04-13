@@ -5,6 +5,7 @@ import { Dynamic, Portal } from 'solid-js/web';
 import { Transition } from 'solid-transition-group';
 import { windi } from '../windi';
 import { IconHelp } from './icons';
+import clsx from 'clsx';
 
 interface TooltipProps {
   anchorEl: HTMLElement | null;
@@ -82,6 +83,7 @@ const createTooltipViewModel = () => {
 
 interface IconTooltipProps {
   iconComponent: Component<ComponentProps<'svg'>>;
+  iconClass?: string;
 }
 export const IconTooltip: Component<ParentProps<IconTooltipProps>> = (props) => {
   const { anchorEl, setAnchorEl, isTooltipOpen, onMouseEnterToAnchor, onMouseLeaveFromAnchor } =
@@ -91,7 +93,7 @@ export const IconTooltip: Component<ParentProps<IconTooltipProps>> = (props) => 
     <>
       <Dynamic
         component={props.iconComponent}
-        class="text-gray-600 hover:text-gray-800 w-6 h-6 flex-shrink-0"
+        class={clsx(windi`text-gray-600 hover:text-gray-800 w-6 h-6 flex-shrink-0`, props.iconClass)}
         ref={setAnchorEl}
         onMouseEnter={onMouseEnterToAnchor}
         onMouseLeave={onMouseLeaveFromAnchor}

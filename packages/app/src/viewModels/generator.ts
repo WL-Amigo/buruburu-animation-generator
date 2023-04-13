@@ -1,4 +1,4 @@
-import { Accessor, createEffect, createSignal, onCleanup, untrack } from 'solid-js';
+import { Accessor, createEffect, createMemo, createSignal, onCleanup, untrack } from 'solid-js';
 import { Store } from 'solid-js/store';
 import {
   AnimationEncoderParameters,
@@ -8,11 +8,13 @@ import {
 } from '../models';
 import { workerCommunicator } from '../processor';
 import { removeFileExtension } from '../utils/fileName';
+import { dequal } from 'dequal';
 
 export interface GeneratorViewModel {
   isProcessing: Accessor<boolean>;
   setFile: (file: File) => void;
   hasFile: Accessor<boolean>;
+  hasUnappliedParams: Accessor<boolean>;
   imageBitmap: Accessor<ImageBitmap | null>;
   imageDataList: Accessor<ImageData[]>;
   runGenerator: () => Promise<void>;
@@ -26,6 +28,32 @@ export const createGeneratorViewModel = (parameters: Store<GeneratorParameters>)
   const [file, setFile] = createSignal<File | null>(null);
   const [currentImageBitmap, setImageBitmap] = createSignal<ImageBitmap | null>(null);
   const [imageDataList, setImageDataList] = createSignal<ImageData[]>([]);
+  const [lastUsedParams, setLastUsedParams] = createSignal<GeneratorParameters>({ ...parameters });
+  const hasUnappliedParams = createMemo(() => {
+    const lup = lastUsedParams();
+    return !dequal(
+      [
+        parameters.threshold,
+        parameters.onlyExternal,
+        parameters.contourExtractionBasis,
+        parameters.patchSize,
+        parameters.movableLength,
+        parameters.isStride,
+        parameters.std,
+        parameters.variationCount,
+      ],
+      [
+        lup.threshold,
+        lup.onlyExternal,
+        lup.contourExtractionBasis,
+        lup.patchSize,
+        lup.movableLength,
+        lup.isStride,
+        lup.std,
+        lup.variationCount,
+      ]
+    );
+  });
 
   createEffect(() => {
     const currentFile = file();
@@ -58,6 +86,7 @@ export const createGeneratorViewModel = (parameters: Store<GeneratorParameters>)
       variationCount: parameters.variationCount,
     };
 
+    setLastUsedParams({ ...parameters });
     setIsProcessing(true);
     try {
       const t0 = performance.now();
@@ -114,6 +143,7 @@ export const createGeneratorViewModel = (parameters: Store<GeneratorParameters>)
     isProcessing,
     setFile,
     hasFile: () => file() !== null,
+    hasUnappliedParams,
     imageBitmap: currentImageBitmap,
     imageDataList,
     runGenerator: async () => {
