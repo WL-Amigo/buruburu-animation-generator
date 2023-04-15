@@ -1,0 +1,27 @@
+{
+  "name": "@buruburu-animgen/vite-plugin-licenses",
+  "version": "1.0.0",
+  "description": "ライセンス一覧を現在のワークスペース状態から生成する Vite 用プラグイン",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsup ./src/index.ts --format cjs,esm --dts && cp ./src/client.d.ts ./dist/",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Amigo (WhiteLuckBringers)",
+  "license": "MIT",
+  "peerDependencies": {
+    "vite": "^4.1.1"
+  },
+  "dependencies": {
+    "glob": "^7.1.7",
+    "license-checker": "^25.0.1"
+  },
+  "devDependencies": {
+    "@types/glob": "^7.1.3",
+    "@types/license-checker": "^25.0.1",
+    "tsup": "^6.7.0",
+    "vite": "^4.1.1"
+  }
+}

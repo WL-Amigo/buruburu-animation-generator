@@ -7,6 +7,7 @@ import { IconImageAdd } from './components/icons';
 import clsx from 'clsx';
 import { windi } from './windi';
 import { Loading } from './components/Loading';
+import { InitialPlaceholder } from './views/InitialPlaceholder';
 
 const App: Component = () => {
   const { imageDataList, parameters, setFile, isProcessing, isDownloading } = useAppViewModel();
@@ -23,7 +24,7 @@ const App: Component = () => {
         onDragOver={onDragOver}
         onDrop={onDrop}
       >
-        <Show when={imageDataList().length > 0}>
+        <Show when={imageDataList().length > 0} fallback={<InitialPlaceholder />}>
           <AnimationPreview
             frames={imageDataList()}
             animationEncoderParameters={parameters}

@@ -13,6 +13,8 @@ import IconWindowClose from '~icons/bx/window-close';
 import IconHelp from '~icons/bxs/help-circle';
 import IconRefresh from '~icons/bx/refresh';
 import IconSave from '~icons/bxs/save';
+import IconPackage from '~icons/bxs/package';
+import IconClose from '~icons/bx/x';
 
 export {
   IconRadioCircle,
@@ -30,4 +32,6 @@ export {
   IconHelp,
   IconRefresh,
   IconSave,
+  IconPackage,
+  IconClose,
 };

@@ -8,7 +8,7 @@
     "esModuleInterop": true,
     "jsx": "preserve",
     "jsxImportSource": "solid-js",
-    "types": ["vite/client", "unplugin-icons/types/solid"],
+    "types": ["vite/client", "unplugin-icons/types/solid", "@buruburu-animgen/vite-plugin-licenses/dist/client"],
     "noEmit": true,
     "isolatedModules": true
   }
