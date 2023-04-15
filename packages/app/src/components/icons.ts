@@ -15,6 +15,8 @@ import IconRefresh from '~icons/bx/refresh';
 import IconSave from '~icons/bxs/save';
 import IconPackage from '~icons/bxs/package';
 import IconClose from '~icons/bx/x';
+import IconDotsVertical from '~icons/bx/dots-vertical';
+import IconPrecaution from '~icons/bx/message-error';
 
 export {
   IconRadioCircle,
@@ -34,4 +36,6 @@ export {
   IconSave,
   IconPackage,
   IconClose,
+  IconDotsVertical,
+  IconPrecaution,
 };

@@ -13,6 +13,7 @@ interface Props {
   colorVariant?: ButtonColorVariant;
   disabled?: boolean;
   class?: string;
+  ref?: HTMLButtonElement | ((el: HTMLButtonElement) => void);
 }
 
 export const Button: Component<ParentProps<Props>> = (props) => {
@@ -25,6 +26,7 @@ export const Button: Component<ParentProps<Props>> = (props) => {
       )}
       onClick={() => props.onClick()}
       disabled={props.disabled}
+      ref={props.ref}
     >
       {props.children}
     </button>
@@ -41,6 +43,7 @@ export const ActionButton: Component<ParentProps<Props>> = (props) => {
       )}
       onClick={() => props.onClick()}
       disabled={props.disabled}
+      ref={props.ref}
     >
       {props.children}
     </button>

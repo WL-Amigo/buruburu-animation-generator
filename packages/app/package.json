@@ -12,6 +12,7 @@
   },
   "license": "MIT",
   "devDependencies": {
+    "@buruburu-animgen/vite-plugin-licenses": "workspace:*",
     "@iconify-json/bx": "^1.1.6",
     "@iconify-json/bxs": "^1.1.6",
     "@typescript-eslint/eslint-plugin": "^5.57.0",
@@ -26,8 +27,7 @@
     "vite": "^4.1.1",
     "vite-plugin-solid": "^2.5.0",
     "vite-plugin-windicss": "^1.8.10",
-    "windicss": "^3.5.6",
-    "@buruburu-animgen/vite-plugin-licenses": "workspace:*"
+    "windicss": "^3.5.6"
   },
   "dependencies": {
     "@floating-ui/dom": "^1.2.6",
@@ -43,6 +43,7 @@
     "solid-headless": "^0.13.1",
     "solid-js": "^1.6.10",
     "solid-transition-group": "^0.2.2",
+    "unstorage": "^1.4.1",
     "vanilla-colorful": "^0.7.2",
     "zod": "^3.21.4"
   }
