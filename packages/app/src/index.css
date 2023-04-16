@@ -9,3 +9,8 @@ body {
   height: 100%;
   overflow: hidden;
 }
+
+#dialog {
+  max-width: 100dvw;
+  max-height: 100dvh;
+}

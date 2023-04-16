@@ -19,7 +19,7 @@ export const LicensesDialog: Component<{ open: boolean; onClose: () => void }> =
   return (
     <ModalBase open={props.open} onClickAway={props.onClose}>
       <div
-        class="relative w-full max-w-screen-lg max-h-screen-md overflow-y-auto rounded bg-white p-2"
+        class="relative w-full max-w-screen-lg h-full lg:h-auto lg:max-h-screen-md overflow-y-auto rounded bg-white p-2"
         onClick={(ev) => ev.stopPropagation()}
       >
         <div class="sticky top-0 lg:hidden h-10 flex flex-row justify-end">
