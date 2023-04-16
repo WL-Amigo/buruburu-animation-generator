@@ -5,6 +5,8 @@ import {
   ContourGetterParameters,
   FrameRendererParameters,
   GeneratorParameters,
+  getFileExtensionFromExportFileType,
+  getMimeTypeFromExportFileType,
 } from '../models';
 import { workerCommunicator } from '../processor';
 import { removeFileExtension } from '../utils/fileName';
@@ -19,6 +21,7 @@ export interface GeneratorViewModel {
   imageDataList: Accessor<ImageData[]>;
   runGenerator: () => Promise<void>;
   isDownloading: Accessor<boolean>;
+  getAnimationFile: () => Promise<File | null>;
   download: () => Promise<void>;
 }
 
@@ -112,31 +115,47 @@ export const createGeneratorViewModel = (parameters: Store<GeneratorParameters>)
     });
   });
 
-  const download = async () => {
+  const getAnimationFile = async (): Promise<File | null> => {
     const currentFile = file();
     const frames = imageDataList();
     if (currentFile === null || frames.length === 0) {
-      return;
+      return null;
     }
 
+    const exportFileType = parameters.exportFileType;
     const animationEncoderParameters: AnimationEncoderParameters = {
       variationCount: parameters.variationCount,
       fps: parameters.fps,
-      exportFileType: parameters.exportFileType,
+      exportFileType,
       backgroundColor: parameters.backgroundColor,
     };
+
     setIsDownloading(true);
     try {
       const animationFileBlob = await workerCommunicator.encodeAnimation(frames, animationEncoderParameters);
-      const blobUrl = URL.createObjectURL(animationFileBlob);
-      const anchorEl = document.createElement('a');
-      anchorEl.href = blobUrl;
-      anchorEl.download = `${removeFileExtension(currentFile.name)}_buruburu.gif`;
-      anchorEl.click();
-      URL.revokeObjectURL(blobUrl);
+      return new File(
+        [animationFileBlob],
+        `${removeFileExtension(currentFile.name)}_buruburu.${getFileExtensionFromExportFileType(exportFileType)}`,
+        { type: getMimeTypeFromExportFileType(exportFileType) }
+      );
+    } catch (_) {
+      return null;
     } finally {
       setIsDownloading(false);
     }
+  };
+
+  const download = async () => {
+    const animationFile = await getAnimationFile();
+    if (animationFile === null) {
+      return;
+    }
+    const blobUrl = URL.createObjectURL(animationFile);
+    const anchorEl = document.createElement('a');
+    anchorEl.href = blobUrl;
+    anchorEl.download = animationFile.name;
+    anchorEl.click();
+    URL.revokeObjectURL(blobUrl);
   };
 
   return {
@@ -154,6 +173,7 @@ export const createGeneratorViewModel = (parameters: Store<GeneratorParameters>)
       await runGenerator(bitmap);
     },
     isDownloading,
+    getAnimationFile,
     download,
   };
 };

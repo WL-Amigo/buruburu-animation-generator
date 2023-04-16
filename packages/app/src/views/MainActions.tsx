@@ -7,6 +7,7 @@ import { ActionButton } from '../components/Button';
 import { IconTooltip } from '../components/Tooltip';
 import { IconRefresh, IconSave } from '../components/icons';
 import { OtherMenus } from './otherMenus';
+import { ShareActionButton } from './share';
 
 export const MainActions: Component<{ class?: string }> = (props) => {
   const { setFile, hasFile, hasUnappliedParams, runGenerator, isProcessing, download, isDownloading } =
@@ -16,7 +17,7 @@ export const MainActions: Component<{ class?: string }> = (props) => {
     <div class={clsx(windi`flex flex-col w-full items-stretch`, props.class)}>
       <div class="flex flex-row">
         <ActionButton
-          class="flex-1 flex flex-row justify-center items-center gap-x-1"
+          class="flex-1 gap-x-1"
           onClick={() => runGenerator()}
           disabled={!hasFile() || isProcessing() || isDownloading()}
         >
@@ -34,12 +35,13 @@ export const MainActions: Component<{ class?: string }> = (props) => {
           </Show>
           <span>アニメーション再生成</span>
         </ActionButton>
+        <ShareActionButton />
         <OtherMenus />
       </div>
       <div class="flex flex-row w-full border-t">
         <FileInput id="image-file-input" accept="image/*" onInputFile={setFile} class="flex-1 border-none" />
         <ActionButton
-          class="flex-1 border-l flex flex-row justify-center items-center gap-x-1"
+          class="flex-1 border-l gap-x-1"
           onClick={() => download()}
           disabled={!hasFile() || isDownloading() || isProcessing()}
         >

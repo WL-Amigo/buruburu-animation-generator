@@ -10,6 +10,7 @@ importers:
       '@buruburu-animgen/vite-plugin-licenses': workspace:*
       '@floating-ui/dom': ^1.2.6
       '@iconify-json/bx': ^1.1.6
+      '@iconify-json/bxl': ^1.1.6
       '@iconify-json/bxs': ^1.1.6
       '@techstark/opencv-js': 4.7.0-release.1
       '@typescript-eslint/eslint-plugin': ^5.57.0
@@ -41,6 +42,7 @@ importers:
       zod: ^3.21.4
     dependencies:
       '@floating-ui/dom': 1.2.6
+      '@iconify-json/bxl': 1.1.6
       '@techstark/opencv-js': 4.7.0-release.1
       '@zip.js/zip.js': 2.6.83
       clsx: 1.2.1
@@ -693,6 +695,12 @@ packages:
       '@iconify/types': 2.0.0
     dev: true
 
+  /@iconify-json/bxl/1.1.6:
+    resolution: {integrity: sha512-XPGoPmHRL7O3XhdeVKKvW1VcdbvP6w+XmCZ8er90fNqjbgQYIHJaIa3VRfRgKqXGJSWg0VEH6/9AfvLmbgGfKg==}
+    dependencies:
+      '@iconify/types': 2.0.0
+    dev: false
+
   /@iconify-json/bxs/1.1.6:
     resolution: {integrity: sha512-HTn+klVO4TtO/+2kTcFWFzD71aZr6H8rTybkMjuebYwdTEBlMCnjCu/3xdZr+x3Dtpd81WVwZfkZQk14VgNbRA==}
     dependencies:
@@ -701,7 +709,6 @@ packages:
 
   /@iconify/types/2.0.0:
     resolution: {integrity: sha512-+wluvCrRhXrhyOmRDJ3q8mux9JkKy5SJ/v8ol2tu4FVjyYvtEzkc/3pK15ET6RKg4b4w4BmTk1+gsCUhf21Ykg==}
-    dev: true
 
   /@iconify/utils/2.1.5:
     resolution: {integrity: sha512-6MvDI+I6QMvXn5rK9KQGdpEE4mmLTcuQdLZEiX5N+uZB+vc4Yw9K1OtnOgkl8mp4d9X0UrILREyZgF1NUwUt+Q==}

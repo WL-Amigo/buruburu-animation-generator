@@ -17,6 +17,9 @@ import IconPackage from '~icons/bxs/package';
 import IconClose from '~icons/bx/x';
 import IconDotsVertical from '~icons/bx/dots-vertical';
 import IconPrecaution from '~icons/bx/message-error';
+import IconShare from '~icons/bx/share-alt';
+import IconCopy from '~icons/bx/copy-alt';
+import IconTwitter from '~icons/bxl/twitter';
 
 export {
   IconRadioCircle,
@@ -38,4 +41,7 @@ export {
   IconClose,
   IconDotsVertical,
   IconPrecaution,
+  IconShare,
+  IconCopy,
+  IconTwitter,
 };

@@ -18,6 +18,7 @@ const AppViewModelContext = createContext<AppViewModel>({
   hasUnappliedParams: () => false,
   imageBitmap: () => null,
   isDownloading: () => false,
+  getAnimationFile: () => Promise.resolve(null),
   download: () => Promise.resolve(),
 } satisfies AppViewModel);
 

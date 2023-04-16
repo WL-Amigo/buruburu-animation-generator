@@ -31,6 +31,7 @@
   },
   "dependencies": {
     "@floating-ui/dom": "^1.2.6",
+    "@iconify-json/bxl": "^1.1.6",
     "@techstark/opencv-js": "4.7.0-release.1",
     "@zip.js/zip.js": "^2.6.83",
     "clsx": "^1.2.1",

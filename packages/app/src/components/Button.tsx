@@ -33,10 +33,36 @@ export const Button: Component<ParentProps<Props>> = (props) => {
   );
 };
 
+interface LinkButtonProps {
+  href: string;
+  colorVariant?: ButtonColorVariant;
+  // disabled?: boolean;
+  class?: string;
+  ref?: HTMLAnchorElement | ((el: HTMLAnchorElement) => void);
+}
+export const LinkButton: Component<ParentProps<LinkButtonProps>> = (props) => {
+  return (
+    <a
+      class={clsx(
+        windi`flex flex-row px-2 py-1 rounded cursor-pointer disabled:cursor-not-allowed`,
+        ColorVariantToClassMap[props.colorVariant ?? 'default'],
+        props.class
+      )}
+      href={props.href}
+      rel="noopener"
+      target="_blank"
+      ref={props.ref}
+    >
+      {props.children}
+    </a>
+  );
+};
+
 export const ActionButton: Component<ParentProps<Props>> = (props) => {
   return (
     <button
       class={clsx(
+        windi`flex flex-row items-center justify-center`,
         windi`py-3 cursor-pointer disabled:cursor-not-allowed`,
         windi`bg-white hover:bg-primary-50 disabled:text-gray-400 disabled:hover:bg-white`,
         props.class
