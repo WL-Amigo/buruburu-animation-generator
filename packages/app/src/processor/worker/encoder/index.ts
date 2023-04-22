@@ -8,9 +8,9 @@ export class AnimationEncoderWorker {
     switch (parameters.exportFileType) {
       case 'gif':
         return encodeAnimatedGif(srcList, parameters);
-      case 'apng':
-        // TODO: APNG 対応
-        throw new Error('unimplemented');
+      // case 'apng':
+      //   // TODO: APNG 対応
+      //   throw new Error('unimplemented');
       case 'frames':
         return await createFramesZip(srcList, parameters);
     }

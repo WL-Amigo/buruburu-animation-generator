@@ -22,12 +22,12 @@ const FrameRendererParametersSchema = z.object({
 });
 export type FrameRendererParameters = z.infer<typeof FrameRendererParametersSchema>;
 
-export const ExportFileTypeEnumSchema = z.enum(['gif', 'apng', 'frames']);
+export const ExportFileTypeEnumSchema = z.enum(['gif', /*'apng',*/ 'frames']);
 export const AllExportFileTypeEnum = ExportFileTypeEnumSchema.options;
 export type ExportFileTypeEnum = z.infer<typeof ExportFileTypeEnumSchema>;
 const ExportFileTypeToMimeTypeMap: Readonly<Record<ExportFileTypeEnum, string>> = {
   gif: 'image/gif',
-  apng: 'image/apng',
+  // apng: 'image/apng',
   frames: 'application/zip',
 };
 export const getMimeTypeFromExportFileType = (ft: ExportFileTypeEnum): string => {
@@ -35,7 +35,7 @@ export const getMimeTypeFromExportFileType = (ft: ExportFileTypeEnum): string =>
 };
 const ExportFileTypeToFileExtensionMap: Readonly<Record<ExportFileTypeEnum, string>> = {
   gif: 'gif',
-  apng: 'apng',
+  // apng: 'apng',
   frames: 'frames.zip',
 };
 export const getFileExtensionFromExportFileType = (ft: ExportFileTypeEnum): string => {

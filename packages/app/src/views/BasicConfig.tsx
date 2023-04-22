@@ -142,8 +142,8 @@ export const BasicConfig: Component<{ class?: string }> = (props) => {
           switch (opt) {
             case 'gif':
               return 'gif';
-            case 'apng':
-              return 'apng';
+            // case 'apng':
+            //   return 'apng';
             case 'frames':
               return '連番PNG (zip)';
           }
