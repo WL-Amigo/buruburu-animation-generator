@@ -24,6 +24,7 @@ const createIsRequiredFeatureAvailable = (): Accessor<boolean | null> => {
         const FeatureChecker = Comlink.wrap<typeof FeatureCheckerWorker>(featureCheckerWorkerInstance);
         const featureChecker = await new FeatureChecker();
         setIsRequiredFeatureAvailable(await featureChecker.checkFeatureAvailability());
+        featureCheckerWorkerInstance.terminate();
       } catch (_) {
         setIsRequiredFeatureAvailable(false);
       }
