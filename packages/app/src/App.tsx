@@ -8,12 +8,15 @@ import clsx from 'clsx';
 import { windi } from './windi';
 import { Loading } from './components/Loading';
 import { InitialPlaceholder } from './views/InitialPlaceholder';
+import { trackPageView } from './compositions/nulliticsTrack';
 
 const App: Component = () => {
   const { imageDataList, parameters, setFile, isProcessing, isDownloading } = useAppViewModel();
   const { inDropArea, onDragEnter, onDragLeave, onDragOver, onDrop } = createFileDragAndDropHandlers((file) =>
     setFile(file)
   );
+
+  trackPageView();
 
   return (
     <div class="flex flex-col lg:flex-row w-full h-full overflow-hidden">
