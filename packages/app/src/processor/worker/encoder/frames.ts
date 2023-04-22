@@ -4,7 +4,7 @@ import { getOffscreenContext2D } from '../../../utils';
 
 export const createFramesZip = async (
   srcList: ImageData[],
-  parameters: AnimationEncoderParameters
+  _parameters: AnimationEncoderParameters
 ): Promise<ArrayBuffer> => {
   const zipBufferWriter = new zip.Uint8ArrayWriter();
   const zipWriter = new zip.ZipWriter(zipBufferWriter);
@@ -20,8 +20,6 @@ export const createFramesZip = async (
     const src = srcList[srcIdx]!;
     copyCtx.putImageData(src, 0, 0);
     ctx.clearRect(0, 0, width, height);
-    ctx.fillStyle = parameters.backgroundColor;
-    ctx.fillRect(0, 0, width, height);
     ctx.drawImage(copySrcCanvas, 0, 0);
     zipWriter.add(`${srcIdx.padStart(2, '0')}.png`, new zip.BlobReader(await canvas.convertToBlob()));
   }
