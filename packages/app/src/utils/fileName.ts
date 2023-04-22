@@ -1,3 +1,7 @@
 export const removeFileExtension = (fileName: string): string => {
-  return fileName.split('.').at(0) ?? fileName;
+  const dotSplitted = fileName.split('.');
+  if (dotSplitted.length <= 1) {
+    return fileName;
+  }
+  return dotSplitted.slice(0, -1).join('.') ?? fileName;
 };
