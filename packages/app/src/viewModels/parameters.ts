@@ -7,8 +7,8 @@ export interface ParametersViewModel {
   reset: () => void;
 }
 
-export const createGeneratorParametersStore = (): ParametersViewModel => {
-  const [parameters, setParameters] = createStore(createDefaultGeneratorParameters());
+export const createGeneratorParametersStore = (initParams: GeneratorParameters): ParametersViewModel => {
+  const [parameters, setParameters] = createStore(initParams);
   const reset = () => {
     setParameters(createDefaultGeneratorParameters());
   };

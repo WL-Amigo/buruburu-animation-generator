@@ -1,23 +1,26 @@
 import { z } from 'zod';
+import { StorageInstance } from './storage';
 
 const ContourExtractionBasisEnum = z.enum(['brightness', 'grayscale']);
 export type ContourExtractionBasisType = z.infer<typeof ContourExtractionBasisEnum>;
 export const ContourExtractionBasisOptions = ContourExtractionBasisEnum.options;
 
-export interface ContourGetterParameters {
-  threshold: number;
-  onlyExternal: boolean;
-  contourExtractionBasis: ContourExtractionBasisType;
-}
+const ContourGetterParametersSchema = z.object({
+  threshold: z.number().default(210),
+  onlyExternal: z.boolean().default(false),
+  contourExtractionBasis: ContourExtractionBasisEnum.default('brightness'),
+});
+export type ContourGetterParameters = z.infer<typeof ContourGetterParametersSchema>;
 
-export interface FrameRendererParameters {
-  isStride: boolean;
-  patchSize: number;
-  movableLength: number;
-  eps: number;
-  std: number;
-  variationCount: number;
-}
+const FrameRendererParametersSchema = z.object({
+  isStride: z.boolean().default(true),
+  patchSize: z.number().default(4),
+  movableLength: z.number().default(2.5),
+  eps: z.number().default(0.99),
+  std: z.number().default(0.2),
+  variationCount: z.number().default(10),
+});
+export type FrameRendererParameters = z.infer<typeof FrameRendererParametersSchema>;
 
 export const ExportFileTypeEnumSchema = z.enum(['gif', 'apng', 'frames']);
 export const AllExportFileTypeEnum = ExportFileTypeEnumSchema.options;
@@ -38,29 +41,26 @@ const ExportFileTypeToFileExtensionMap: Readonly<Record<ExportFileTypeEnum, stri
 export const getFileExtensionFromExportFileType = (ft: ExportFileTypeEnum): string => {
   return ExportFileTypeToFileExtensionMap[ft];
 };
-export interface AnimationEncoderParameters {
-  variationCount: number;
-  fps: number;
-  exportFileType: ExportFileTypeEnum;
-  backgroundColor: string;
-}
-
-export interface GeneratorParameters
-  extends ContourGetterParameters,
-    FrameRendererParameters,
-    AnimationEncoderParameters {}
-
-export const createDefaultGeneratorParameters = (): GeneratorParameters => ({
-  threshold: 210,
-  onlyExternal: false,
-  contourExtractionBasis: 'brightness',
-  isStride: true,
-  patchSize: 4,
-  movableLength: 2.5,
-  eps: 0.99,
-  std: 0.2,
-  variationCount: 10,
-  fps: 30,
-  exportFileType: 'gif',
-  backgroundColor: '#ffffff',
+const AnimationEncoderParametersSchema = z.object({
+  variationCount: z.number().default(10),
+  fps: z.number().default(30),
+  exportFileType: ExportFileTypeEnumSchema.default('gif'),
+  backgroundColor: z.string().default('#ffffff'),
 });
+export type AnimationEncoderParameters = z.infer<typeof AnimationEncoderParametersSchema>;
+
+const GeneratorParametersSchema = ContourGetterParametersSchema.merge(FrameRendererParametersSchema).merge(
+  AnimationEncoderParametersSchema
+);
+export type GeneratorParameters = z.infer<typeof GeneratorParametersSchema>;
+
+export const createDefaultGeneratorParameters = (): GeneratorParameters => GeneratorParametersSchema.parse({});
+
+export const getLastUsedGeneratorParameters = async (): Promise<GeneratorParameters> => {
+  const savedParams = (await StorageInstance.get('lastUsedParameters')) as GeneratorParameters | null | undefined;
+  return savedParams !== undefined && savedParams !== null ? savedParams : createDefaultGeneratorParameters();
+};
+
+export const saveLastUsedGeneratorParameters = async (params: GeneratorParameters): Promise<void> => {
+  await StorageInstance.set('lastUsedParameters', params);
+};

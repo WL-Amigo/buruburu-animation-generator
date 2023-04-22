@@ -10,6 +10,7 @@
     "jsxImportSource": "solid-js",
     "types": ["vite/client", "unplugin-icons/types/solid", "@buruburu-animgen/vite-plugin-licenses/dist/client"],
     "noEmit": true,
-    "isolatedModules": true
+    "isolatedModules": true,
+    "skipLibCheck": true
   }
 }

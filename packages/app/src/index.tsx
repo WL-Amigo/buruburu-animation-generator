@@ -17,11 +17,13 @@ if (import.meta.env.DEV && !(root instanceof HTMLElement)) {
 
 render(
   () => (
-    <AppViewModelContextProvider>
-      <Bootstrap>
-        <App />
-      </Bootstrap>
-    </AppViewModelContextProvider>
+    <Bootstrap>
+      {(initStates) => (
+        <AppViewModelContextProvider initStates={initStates}>
+          <App />
+        </AppViewModelContextProvider>
+      )}
+    </Bootstrap>
   ),
   root!
 );

@@ -1,11 +1,18 @@
-import { Component, ParentProps } from 'solid-js';
+import { Component, JSX, Show } from 'solid-js';
 import { RequiredFeatureCheckGuard } from './featureChecker';
 import { ConsentPrecautionStatusGuard } from './precautionConsent';
+import { InitStates, createInitStateLoader } from './initStateLoader';
 
-export const Bootstrap: Component<ParentProps<{}>> = (props) => {
+export const Bootstrap: Component<{ children: (initStates: InitStates) => JSX.Element }> = (props) => {
+  const initState = createInitStateLoader();
+
   return (
     <RequiredFeatureCheckGuard>
-      <ConsentPrecautionStatusGuard>{props.children}</ConsentPrecautionStatusGuard>
+      <ConsentPrecautionStatusGuard>
+        <Show when={initState()} keyed>
+          {(initState) => props.children(initState)}
+        </Show>
+      </ConsentPrecautionStatusGuard>
     </RequiredFeatureCheckGuard>
   );
 };

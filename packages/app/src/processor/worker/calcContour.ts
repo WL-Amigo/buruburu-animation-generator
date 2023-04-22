@@ -2,11 +2,11 @@ import type CV from 'opencv-ts';
 import type { Mat } from 'opencv-ts';
 import type {
   CalcContourEventPayload,
-  ContourExtractionBasisType,
   FinishCalcContourEventPayload,
   FinishInitOpenCVEventPayload,
   Vector2D,
 } from '../types';
+import type { ContourExtractionBasisType } from '../../models';
 
 declare global {
   interface Window {

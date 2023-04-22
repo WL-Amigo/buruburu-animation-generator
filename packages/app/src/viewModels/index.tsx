@@ -2,6 +2,7 @@ import { Component, ParentProps, createContext, useContext } from 'solid-js';
 import { GeneratorViewModel, createGeneratorViewModel } from './generator';
 import { ParametersViewModel, createGeneratorParametersStore } from './parameters';
 import { createDefaultGeneratorParameters } from '../models';
+import { InitStates } from '../bootstrap/initStateLoader';
 
 const noop = () => {};
 
@@ -22,8 +23,8 @@ const AppViewModelContext = createContext<AppViewModel>({
   download: () => Promise.resolve(),
 } satisfies AppViewModel);
 
-export const createAppViewModel = (): AppViewModel => {
-  const parametersVm = createGeneratorParametersStore();
+export const createAppViewModel = (initStates: InitStates): AppViewModel => {
+  const parametersVm = createGeneratorParametersStore(initStates.generatorParameters);
   const generatorVm = createGeneratorViewModel(parametersVm.parameters);
 
   return {
@@ -32,8 +33,9 @@ export const createAppViewModel = (): AppViewModel => {
   };
 };
 
-export const AppViewModelContextProvider: Component<ParentProps> = (props) => {
-  const vm = createAppViewModel();
+export const AppViewModelContextProvider: Component<ParentProps<{ initStates: InitStates }>> = (props) => {
+  // eslint-disable-next-line solid/reactivity
+  const vm = createAppViewModel(props.initStates);
   return <AppViewModelContext.Provider value={vm}>{props.children}</AppViewModelContext.Provider>;
 };
 

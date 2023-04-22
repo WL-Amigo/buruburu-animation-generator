@@ -7,6 +7,7 @@ import {
   GeneratorParameters,
   getFileExtensionFromExportFileType,
   getMimeTypeFromExportFileType,
+  saveLastUsedGeneratorParameters,
 } from '../models';
 import { workerCommunicator } from '../processor';
 import { removeFileExtension } from '../utils/fileName';
@@ -90,6 +91,7 @@ export const createGeneratorViewModel = (parameters: Store<GeneratorParameters>)
     };
 
     setLastUsedParams({ ...parameters });
+    saveLastUsedGeneratorParameters({ ...parameters });
     setIsProcessing(true);
     try {
       const t0 = performance.now();
@@ -130,6 +132,7 @@ export const createGeneratorViewModel = (parameters: Store<GeneratorParameters>)
       backgroundColor: parameters.backgroundColor,
     };
 
+    saveLastUsedGeneratorParameters({ ...parameters });
     setIsDownloading(true);
     try {
       const animationFileBlob = await workerCommunicator.encodeAnimation(frames, animationEncoderParameters);
