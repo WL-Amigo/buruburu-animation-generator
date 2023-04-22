@@ -55,23 +55,30 @@ export const BasicConfig: Component<{ class?: string }> = (props) => {
         onCloseRequested={() => setContourGetterConfigDialogOpen(false)}
       />
       <NumberStepper
-        id="patch-size"
-        label="一度に動かす範囲 (px)"
-        value={parameters.patchSize}
-        onChange={(v) => setParameters('patchSize', () => v)}
-        step={1}
-        min={1}
-        max={9999}
-      />
-      <NumberStepper
         id="movable-length"
         label="揺れの大きさの最大値 (px)"
+        tooltip={
+          <div class="flex flex-col items-start">
+            <span>小さいと控えめに、大きいとよりブルブルします。</span>
+            <span>大きくしすぎるとノイズっぽくなりますのでご注意ください。</span>
+          </div>
+        }
         value={parameters.movableLength}
         onChange={(v) => setParameters('movableLength', () => v)}
         scale={1}
         step={0.1}
         min={1}
-        max={1000}
+        max={100}
+      />
+      <NumberStepper
+        id="patch-size"
+        label="一度に動かす範囲の半径 (px)"
+        tooltip={<span>小さいとビリビリした印象に、大きいとより大雑把にブルブルするようになります。</span>}
+        value={parameters.patchSize}
+        onChange={(v) => setParameters('patchSize', () => v)}
+        step={1}
+        min={1}
+        max={9999}
       />
 
       <Switch>

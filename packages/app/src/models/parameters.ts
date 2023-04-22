@@ -53,7 +53,7 @@ export const createDefaultGeneratorParameters = (): GeneratorParameters => ({
   contourExtractionBasis: 'brightness',
   isStride: true,
   patchSize: 4,
-  movableLength: 2,
+  movableLength: 2.5,
   eps: 0.99,
   std: 0.2,
   variationCount: 10,

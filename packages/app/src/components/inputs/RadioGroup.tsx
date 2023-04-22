@@ -18,7 +18,7 @@ export const RadioGroup = <OptionsType extends string>(props: Props<OptionsType>
 
   return (
     <HUIRadioGroup class="w-full" value={props.value} onChange={onChangeLocal}>
-      <RadioGroupLabel>{props.label}</RadioGroupLabel>
+      <RadioGroupLabel class="font-bold">{props.label}</RadioGroupLabel>
       <div class="mt-1 flex flex-col gap-x-4 lg:flex-row lg:w-full">
         <For each={props.options}>
           {(opt) => (

@@ -30,7 +30,7 @@ export const Tooltip: Component<ParentProps<TooltipProps>> = (props) => {
         <Show when={props.open}>
           <div
             ref={setFloatingEl}
-            class="p-1 bg-black/75 rounded text-white transform origin-bottom transition-transform duration-100"
+            class="py-1 px-2 bg-black/75 rounded text-white transform origin-bottom transition-transform duration-100"
             style={{
               position: position.strategy,
               top: `${position.y ?? 0}px`,

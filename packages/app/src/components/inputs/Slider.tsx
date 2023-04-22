@@ -12,7 +12,9 @@ interface Props {
 export const SliderInput: Component<Props> = (props) => {
   return (
     <div>
-      <label for={props.id}>{props.label}</label>
+      <label for={props.id} class="font-bold">
+        {props.label}
+      </label>
       <div class="w-full flex flex-row gap-x-2 items-center mt-2">
         <span class="w-10">{props.value}</span>
         <input

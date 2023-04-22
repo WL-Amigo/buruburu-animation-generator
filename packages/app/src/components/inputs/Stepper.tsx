@@ -101,7 +101,7 @@ export const NumberStepper: Component<Props> = (props) => {
   return (
     <div>
       <label for={props.id} class="flex flex-row gap-x-2 items-center">
-        <span>{props.label}</span>
+        <span class="font-bold">{props.label}</span>
         {props.tooltip !== undefined && <HelpTooltip>{props.tooltip}</HelpTooltip>}
       </label>
       <div class="flex flex-row gap-x-1 items-stretch w-full mt-2 max-w-[240px] h-8">
