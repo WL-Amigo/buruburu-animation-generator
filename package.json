@@ -1,4 +1,7 @@
 {
   "name": "buruburu-animation-generator",
-  "license": "MIT"
+  "license": "MIT",
+  "scripts": {
+    "build": "pnpm run -r build"
+  }
 }
