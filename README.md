@@ -15,6 +15,9 @@
 ## ライセンス
 
 - `/packages/app/public/static_images/` 以下の画像: [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)
+  - ロゴに使用したフォント
+    - [効果音フォント](http://www.manga-sozai.com/data/koukaonfont)
+    - [M PLUS 2](https://mplusfonts.github.io/)
 - `/packages/app/`
   - `public/opencv.js`: [Apache-2.0](https://github.com/opencv/opencv/blob/4.x/LICENSE)
   - `src/processor/worker/encoder/pnnQuant.mjs`: [MPL 2.0](https://github.com/mcychan/PnnQuant.js/blob/master/LICENSE)
