@@ -16,6 +16,7 @@
     "@buruburu-animgen/vite-plugin-licenses": "workspace:*",
     "@iconify-json/bx": "^1.1.6",
     "@iconify-json/bxs": "^1.1.6",
+    "@iconify-json/bxl": "^1.1.6",
     "@typescript-eslint/eslint-plugin": "^5.57.0",
     "@typescript-eslint/parser": "^5.57.0",
     "eslint": "^8.37.0",
@@ -32,8 +33,6 @@
   },
   "dependencies": {
     "@floating-ui/dom": "^1.2.6",
-    "@iconify-json/bxl": "^1.1.6",
-    "@techstark/opencv-js": "4.7.0-release.1",
     "@zip.js/zip.js": "^2.6.83",
     "clsx": "^1.2.1",
     "comlink": "^4.4.1",
