@@ -1,3 +1,14 @@
+All files included in this repository are licensed under MIT License,
+except files below:
+
+- image files under `/packages/app/public/static_images/`: [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)
+- `/packages/app/`
+  - `public/opencv.js`: [Apache-2.0](https://github.com/opencv/opencv/blob/4.x/LICENSE)
+    - by [OpenCV org](https://opencv.org/)
+  - `src/processor/worker/encoder/pnnQuant.mjs`: [MPL 2.0](https://github.com/mcychan/PnnQuant.js/blob/master/LICENSE)
+    - by [Miller Cy Chan](https://github.com/mcychan)
+
+==========
 MIT License
 
 Copyright (c) 2023 Amigo(WhiteLuckBringers), wwwshwww (https://github.com/wwwshwww)
