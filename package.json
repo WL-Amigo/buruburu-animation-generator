@@ -3,5 +3,8 @@
   "license": "MIT",
   "scripts": {
     "build": "pnpm run -r build"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.2"
   }
 }
