@@ -3,10 +3,9 @@ import { useAppViewModel } from '../viewModels';
 import { ModalBase } from '../components/ModalBase';
 import { ContourPreview } from '../components/ContourPreview';
 import { SliderInput } from '../components/inputs/Slider';
-import { ContourGetterParameters } from '../models';
+import { ContourExtractionBasisOptions, ContourExtractionBasisType, ContourGetterParameters } from '../models';
 import { CheckBoxInput } from '../components/inputs/CheckBox';
 import { RadioGroup } from '../components/inputs';
-import { ContourExtractionBasisOptions, ContourExtractionBasisType } from '../processor/types';
 import { ActionButton } from '../components/Button';
 
 const getContourGetterParameters = (source: ContourGetterParameters): ContourGetterParameters => ({
@@ -74,7 +73,7 @@ export const ContourGetterConfigDialog: Component<Props> = (props) => {
             />
           </div>
           <div class="flex flex-row border-t">
-            <ActionButton class="flex-1 border-r" onClick={() => props.onCloseRequested()}>
+            <ActionButton class="flex-1 border-r" onClick={props.onCloseRequested}>
               キャンセル
             </ActionButton>
             <ActionButton

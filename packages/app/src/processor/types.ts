@@ -1,9 +1,6 @@
-import { z } from 'zod';
+import { ContourExtractionBasisType } from '../models';
 
 export type Vector2D = [number, number];
-const ContourExtractionBasisEnum = z.enum(['brightness', 'grayscale']);
-export type ContourExtractionBasisType = z.infer<typeof ContourExtractionBasisEnum>;
-export const ContourExtractionBasisOptions = ContourExtractionBasisEnum.options;
 
 // main -> OpenCV Worker
 export const CalcContourEventId = 'calcContours';

@@ -1,5 +1,8 @@
 import { z } from 'zod';
-import { ContourExtractionBasisType } from '../processor/types';
+
+const ContourExtractionBasisEnum = z.enum(['brightness', 'grayscale']);
+export type ContourExtractionBasisType = z.infer<typeof ContourExtractionBasisEnum>;
+export const ContourExtractionBasisOptions = ContourExtractionBasisEnum.options;
 
 export interface ContourGetterParameters {
   threshold: number;
