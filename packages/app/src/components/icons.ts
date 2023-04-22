@@ -20,6 +20,7 @@ import IconPrecaution from '~icons/bx/message-error';
 import IconShare from '~icons/bx/share-alt';
 import IconCopy from '~icons/bx/copy-alt';
 import IconTwitter from '~icons/bxl/twitter';
+import IconGitHub from '~icons/bxl/github';
 
 export {
   IconRadioCircle,
@@ -44,4 +45,5 @@ export {
   IconShare,
   IconCopy,
   IconTwitter,
+  IconGitHub,
 };

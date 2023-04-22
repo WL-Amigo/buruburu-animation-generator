@@ -4,7 +4,7 @@ import type { License } from '@buruburu-animgen/vite-plugin-licenses/dist/index'
 import { ModalBase } from '../components/ModalBase';
 import { windi } from '../windi';
 import clsx from 'clsx';
-import { IconClose, IconPackage } from '../components/icons';
+import { IconClose, IconGitHub, IconPackage } from '../components/icons';
 
 const AllLicenses: readonly License[] = [
   ...Licenses,
@@ -33,6 +33,15 @@ export const LicensesDialog: Component<{ open: boolean; onClose: () => void }> =
         <div class="pl-2 pb-4 pt-2 flex flex-col md:flex-row">
           <div class="text-xl">ブルブルアニメジェネレーター</div>
           <div class="md:pl-4">presented by WhiteLuckBringers</div>
+          <a
+            class="md:pl-4 flex flex-row gap-x-1 items-center text-primary-700 hover:text-primary-500"
+            href="https://github.com/WL-Amigo/buruburu-animation-generator"
+            rel="noopener"
+            target="_blank"
+          >
+            <IconGitHub />
+            <span>GitHub</span>
+          </a>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
           <For each={AllLicenses}>{(item) => <LicenseItemView item={item} />}</For>
